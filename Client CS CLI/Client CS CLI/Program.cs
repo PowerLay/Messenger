@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
+using System.Threading;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
 
 namespace Client_CS_CLI
@@ -11,9 +14,54 @@ namespace Client_CS_CLI
         {
             Console.Write("Enter nick> ");
             var nick = Console.ReadLine();
+            GetHistoryMessages();
             while (true) Post(nick);
-
         }
+
+        public static async Task<string> GetAsync(string uri)
+        {
+            var request = (HttpWebRequest)WebRequest.Create(uri);
+            request.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
+
+            using (var response = (HttpWebResponse)await request.GetResponseAsync())
+            using (var stream = response.GetResponseStream())
+            using (var reader = new StreamReader(stream))
+            {
+                return await reader.ReadToEndAsync();
+            }
+        }
+
+        private static async Task GetHistoryMessages()
+        {
+            var len = 0;
+            while (true)
+            {
+                var res = await GetAsync("http://localhost:5000/api/Chat");
+
+                if (res != "[]")
+                {
+                    var messages = JsonConvert.DeserializeObject<List<Message>>(res);
+
+                    if (len != messages.Count)
+                    {
+                        var x = Console.CursorLeft;
+                        var y = Console.CursorTop;
+
+                        Console.MoveBufferArea(0, y, x, 1, 0, messages.Count + 1);
+
+                        Console.SetCursorPosition(0, 1);
+                        foreach (var message in messages) Console.WriteLine(message);
+
+                        Console.SetCursorPosition(x, messages.Count + 1);
+
+                        len = messages.Count;
+                    }
+                }
+
+                Thread.Sleep(200);
+            }
+        }
+
         private static void Post(string nick)
         {
             var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://localhost:5000/api/Chat");
