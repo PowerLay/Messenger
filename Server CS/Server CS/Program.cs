@@ -10,8 +10,10 @@ namespace Server_CS
 {
     public class Program
     {
+        public static List<Message> Messages = new List<Message>();
         public static void Main(string[] args)
         {
+            Messages = JsonWorker.Load();
             CreateHostBuilder(args).Build().Run();
         }
 

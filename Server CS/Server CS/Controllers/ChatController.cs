@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Xml.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Server_CS;
 
@@ -11,13 +12,12 @@ namespace Messeger_Server.Controllers
     [ApiController]
     public class ChatController : ControllerBase
     {
-        public static List<Message> Messages = new List<Message>();
 
         // GET: api/<ChatController>
         [HttpGet]
         public List<Message> Get()
         {
-            return Messages;
+            return Program.Messages;
         }
 
         // POST api/<ChatController>
@@ -26,7 +26,8 @@ namespace Messeger_Server.Controllers
         {
             value.MsgTime = DateTime.Now;
             Console.WriteLine(value);
-            Messages.Add(value);
+            Program.Messages.Add(value);
+            JsonWorker.Save(Program.Messages);
             return "ok";
         }
     }
