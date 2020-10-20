@@ -8,22 +8,31 @@ using Newtonsoft.Json;
 
 namespace Client_CS_CLI
 {
-    class Program
+    internal class Program : ConfigManager
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
-            Console.Write("Enter nick> ");
-            var nick = Console.ReadLine();
-            GetHistoryMessages();
-            while (true) Post(nick);
+            LoadConfig();
+            var nick = config.Name;
+            Console.WriteLine($"Your nick: {nick}. (Check config.json)");
+            while (true)
+                try
+                {
+                    GetHistoryMessages();
+                    while (true) Post(nick);
+                }
+                catch (Exception)
+                {
+                    // ignored
+                }
         }
 
         public static async Task<string> GetAsync(string uri)
         {
-            var request = (HttpWebRequest)WebRequest.Create(uri);
+            var request = (HttpWebRequest) WebRequest.Create(uri);
             request.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
 
-            using (var response = (HttpWebResponse)await request.GetResponseAsync())
+            using (var response = (HttpWebResponse) await request.GetResponseAsync())
             using (var stream = response.GetResponseStream())
             using (var reader = new StreamReader(stream))
             {
@@ -58,13 +67,13 @@ namespace Client_CS_CLI
                     }
                 }
 
-                Thread.Sleep(200);
+                Thread.Sleep(config.MillisecondsSleep);
             }
         }
 
         private static void Post(string nick)
         {
-            var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://localhost:5000/api/Chat");
+            var httpWebRequest = (HttpWebRequest) WebRequest.Create("http://localhost:5000/api/Chat");
             httpWebRequest.ContentType = "application/json";
             httpWebRequest.Method = "POST";
 
@@ -74,7 +83,7 @@ namespace Client_CS_CLI
 
         private static void GetAnswer(HttpWebRequest httpWebRequest)
         {
-            var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+            var httpResponse = (HttpWebResponse) httpWebRequest.GetResponse();
             using var streamReader = new StreamReader(httpResponse.GetResponseStream());
             var result = streamReader.ReadToEnd();
             if (result != "ok") Console.WriteLine("Something went wrong");
@@ -84,10 +93,11 @@ namespace Client_CS_CLI
         {
             Console.Write("Enter message> ");
             var msg = Console.ReadLine();
-            var json = JsonConvert.SerializeObject(new Message { Name = nick, Msg = msg });
+            var json = JsonConvert.SerializeObject(new Message {Name = nick, Msg = msg});
             using var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream());
             streamWriter.Write(json);
             streamWriter.Close();
         }
     }
+
 }
