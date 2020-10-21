@@ -24,10 +24,10 @@ namespace Client_CS_CLI
                 nick = config.Name;
                 Console.WriteLine($"Your nick: {nick}. (Check config.json)");
             }
-            
+
             while (true)
                 try
-                {
+                { 
                     GetHistoryMessages();
                     while (true) Post(nick);
                 }
@@ -39,10 +39,10 @@ namespace Client_CS_CLI
 
         public static async Task<string> GetAsync(string uri)
         {
-            var request = (HttpWebRequest) WebRequest.Create(uri);
+            var request = (HttpWebRequest)WebRequest.Create(uri);
             request.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
 
-            using (var response = (HttpWebResponse) await request.GetResponseAsync())
+            using (var response = (HttpWebResponse)await request.GetResponseAsync())
             using (var stream = response.GetResponseStream())
             using (var reader = new StreamReader(stream))
             {
@@ -50,40 +50,45 @@ namespace Client_CS_CLI
             }
         }
 
+        private static int _len = 0;
         private static async Task GetHistoryMessages()
         {
-            var len = 0;
             while (true)
             {
-                var res = await GetAsync("http://localhost:5000/api/Chat");
-
-                if (res != "[]")
-                {
-                    var messages = JsonConvert.DeserializeObject<List<Message>>(res);
-
-                    if (len != messages.Count)
-                    {
-                        var x = Console.CursorLeft;
-                        var y = Console.CursorTop;
-
-                        Console.MoveBufferArea(0, y, x, 1, 0, messages.Count + 1);
-
-                        Console.SetCursorPosition(0, 1);
-                        foreach (var message in messages) Console.WriteLine(message);
-
-                        Console.SetCursorPosition(x, messages.Count + 1);
-
-                        len = messages.Count;
-                    }
-                }
+                await UpdateHistory();
 
                 Thread.Sleep(config.MillisecondsSleep);
             }
         }
 
+        private static async Task UpdateHistory()
+        {
+            var res = await GetAsync("http://localhost:5000/api/Chat");
+
+            if (res != "[]")
+            {
+                var messages = JsonConvert.DeserializeObject<List<Message>>(res);
+
+                if (_len != messages.Count)
+                {
+                    var x = Console.CursorLeft;
+                    var y = Console.CursorTop;
+
+                    Console.MoveBufferArea(0, y, x, 1, 0, messages.Count + 1);
+
+                    Console.SetCursorPosition(0, 1);
+                    foreach (var message in messages) Console.WriteLine(message);
+
+                    Console.SetCursorPosition(x, messages.Count + 1);
+
+                    _len = messages.Count;
+                }
+            }
+        }
+
         private static void Post(string nick)
         {
-            var httpWebRequest = (HttpWebRequest) WebRequest.Create("http://localhost:5000/api/Chat");
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://localhost:5000/api/Chat");
             httpWebRequest.ContentType = "application/json";
             httpWebRequest.Method = "POST";
 
@@ -93,7 +98,7 @@ namespace Client_CS_CLI
 
         private static void GetAnswer(HttpWebRequest httpWebRequest)
         {
-            var httpResponse = (HttpWebResponse) httpWebRequest.GetResponse();
+            var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
             using var streamReader = new StreamReader(httpResponse.GetResponseStream());
             var result = streamReader.ReadToEnd();
             if (result != "ok") Console.WriteLine("Something went wrong");
@@ -101,9 +106,15 @@ namespace Client_CS_CLI
 
         private static void SendMessage(string nick, HttpWebRequest httpWebRequest)
         {
-            Console.Write("Enter message> ");
+            Console.Write("Enter message(or /u for update)> ");
             var msg = Console.ReadLine();
-            var json = JsonConvert.SerializeObject(new Message {Name = nick, Msg = msg});
+            if (msg.Equals("/update") || msg.Equals("/u"))
+            {
+                UpdateHistory();
+                Console.SetCursorPosition(0,Console.CursorTop-1);
+                return;
+            }
+            var json = JsonConvert.SerializeObject(new Message { Name = nick, Msg = msg });
             using var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream());
             streamWriter.Write(json);
             streamWriter.Close();
