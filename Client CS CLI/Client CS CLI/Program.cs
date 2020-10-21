@@ -10,6 +10,8 @@ namespace Client_CS_CLI
 {
     internal class Program : ConfigManager
     {
+        private static int _len;
+
         private static void Main(string[] args)
         {
             LoadConfig();
@@ -27,7 +29,7 @@ namespace Client_CS_CLI
 
             while (true)
                 try
-                { 
+                {
                     GetHistoryMessages();
                     while (true) Post(nick);
                 }
@@ -39,10 +41,10 @@ namespace Client_CS_CLI
 
         public static async Task<string> GetAsync(string uri)
         {
-            var request = (HttpWebRequest)WebRequest.Create(uri);
+            var request = (HttpWebRequest) WebRequest.Create(uri);
             request.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
 
-            using (var response = (HttpWebResponse)await request.GetResponseAsync())
+            using (var response = (HttpWebResponse) await request.GetResponseAsync())
             using (var stream = response.GetResponseStream())
             using (var reader = new StreamReader(stream))
             {
@@ -50,7 +52,6 @@ namespace Client_CS_CLI
             }
         }
 
-        private static int _len = 0;
         private static async Task GetHistoryMessages()
         {
             while (true)
@@ -76,8 +77,9 @@ namespace Client_CS_CLI
 
                     Console.MoveBufferArea(0, y, x, 1, 0, messages.Count + 1);
 
-                    string history="";
-                    foreach (var message in messages) history += message.ToString().PadRight(Console.BufferWidth-1)+"\n";
+                    var history = "";
+                    foreach (var message in messages)
+                        history += message.ToString().PadRight(Console.BufferWidth - 1) + "\n";
                     Console.SetCursorPosition(0, 1);
                     Console.WriteLine(history);
                     Console.SetCursorPosition(x, messages.Count + 1);
@@ -97,17 +99,18 @@ namespace Client_CS_CLI
                 Console.SetCursorPosition(0, Console.CursorTop - 1);
                 return;
             }
-            var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://localhost:5000/api/Chat");
+
+            var httpWebRequest = (HttpWebRequest) WebRequest.Create("http://localhost:5000/api/Chat");
             httpWebRequest.ContentType = "application/json";
             httpWebRequest.Method = "POST";
 
-            SendMessage(nick,msg, httpWebRequest);
+            SendMessage(nick, msg, httpWebRequest);
             GetAnswer(httpWebRequest);
         }
 
         private static void GetAnswer(HttpWebRequest httpWebRequest)
         {
-            var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+            var httpResponse = (HttpWebResponse) httpWebRequest.GetResponse();
             using var streamReader = new StreamReader(httpResponse.GetResponseStream());
             var result = streamReader.ReadToEnd();
             if (result != "ok") Console.WriteLine("Something went wrong");
@@ -115,11 +118,10 @@ namespace Client_CS_CLI
 
         private static void SendMessage(string nick, string msg, HttpWebRequest httpWebRequest)
         {
-            var json = JsonConvert.SerializeObject(new Message { Name = nick, Msg = msg });
+            var json = JsonConvert.SerializeObject(new Message {Name = nick, Msg = msg});
             using var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream());
             streamWriter.Write(json);
             streamWriter.Close();
         }
     }
-
 }
