@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
@@ -10,6 +10,9 @@ namespace Server_CS
 {
     public class Program
     {
+        /// <summary>
+        /// <para>Глобальный объект сообщения, в котором хранятся все сообщения в чате</para>
+        /// </summary>
         public static List<Message> Messages = new List<Message>();
         public static void Main(string[] args)
         {
@@ -17,6 +20,11 @@ namespace Server_CS
             CreateHostBuilder(args).Build().Run();
         }
 
+        /// <summary>
+        /// <para>Создание веб-сервера для обработки запросов</para>
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns></returns>
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
