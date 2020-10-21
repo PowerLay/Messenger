@@ -9,19 +9,21 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-        
-        
+
+
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="233*"/>
-            <ColumnDefinition Width="17*"/>
+            <ColumnDefinition Width="35*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="933*"/>
-            <RowDefinition Height="70"/>
-            
+            <RowDefinition Height="45"/>
         </Grid.RowDefinitions>
-        <TextBox x:Name="textBox" PlaceholderText="Message" TextWrapping="Wrap" Grid.Row="1" Margin="5,7,5,7" AutomationProperties.HelpText="Message" />
-        <Button Content="Send" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" Margin="5,7,5,7" VerticalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
+        <TextBox x:Name="MessageBox" PlaceholderText="Message" TextWrapping="Wrap" Grid.Row="1" Margin="5,7,5,7" AutomationProperties.HelpText="Message" KeyDown="MessageBox_KeyDown" />
+        <Button x:Name="SendButton" Content="Send" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" Margin="5,7,5,7" VerticalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" MinHeight="6" />
+        <ListView Name="MessagesListViev" Grid.Row="0" Grid.ColumnSpan="2">
+            <TextBlock Text="Lol"></TextBlock>
+        </ListView>
 
     </Grid>
 </Page>
