@@ -30,6 +30,8 @@ namespace Client_CS_CLI
     internal class Config
     {
         public int MillisecondsSleep { get; set; } = 200;
+        public bool AskNick { get; set; } = true;
         public string Name { get; set; } = "anonymous";
+
     }
 }

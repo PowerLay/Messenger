@@ -13,8 +13,18 @@ namespace Client_CS_CLI
         private static void Main(string[] args)
         {
             LoadConfig();
-            var nick = config.Name;
-            Console.WriteLine($"Your nick: {nick}. (Check config.json)");
+            string nick;
+            if (config.AskNick)
+            {
+                Console.Write("Enter your nick> ");
+                nick = Console.ReadLine();
+            }
+            else
+            {
+                nick = config.Name;
+                Console.WriteLine($"Your nick: {nick}. (Check config.json)");
+            }
+            
             while (true)
                 try
                 {
