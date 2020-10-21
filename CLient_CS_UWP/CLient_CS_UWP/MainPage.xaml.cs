@@ -27,4 +27,21 @@ namespace CLient_CS_UWP
             this.InitializeComponent();
         }
     }
+
+    public class Contact
+    {
+        public string FirstName { get; private set; }
+        public string LastName { get; private set; }
+        public string Company { get; private set; }
+        public string Name => FirstName + " " + LastName;
+
+        public Contact(string firstName, string lastName, string company)
+        {
+            FirstName = firstName;
+            LastName = lastName;
+            Company = company;
+        }
+    }
+
+
 }

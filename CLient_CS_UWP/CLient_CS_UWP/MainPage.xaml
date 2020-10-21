@@ -9,7 +9,19 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-        <TextBlock x:Name="textBlock" Margin="0,207,292,0" Text="TEST" TextWrapping="Wrap" VerticalAlignment="Top" RenderTransformOrigin="24.704,0.171" HorizontalAlignment="Right" Width="55"/>
+        
+        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="233*"/>
+            <ColumnDefinition Width="17*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="933*"/>
+            <RowDefinition Height="70"/>
+            
+        </Grid.RowDefinitions>
+        <TextBox x:Name="textBox" PlaceholderText="Message" TextWrapping="Wrap" Grid.Row="1" Margin="5,7,5,7" AutomationProperties.HelpText="Message" />
+        <Button Content="Send" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" Margin="5,7,5,7" VerticalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
 
     </Grid>
 </Page>
