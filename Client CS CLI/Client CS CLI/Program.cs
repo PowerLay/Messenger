@@ -88,7 +88,10 @@ namespace Client_CS_CLI
                 }
             }
         }
-
+        /// <summary>
+        /// <para>Функция ввода и печати сообщения в час (отправляется POST запрос на сервер)</para>
+        /// </summary>
+        /// <param name="nick"></param>
         private static void Post(string nick)
         {
             Console.Write("Enter message(or /u for update)>        \b\b\b\b\b\b\b");
@@ -108,6 +111,10 @@ namespace Client_CS_CLI
             GetAnswer(httpWebRequest);
         }
 
+        /// <summary>
+        /// <para>Функция получения ответа от сервера</para>
+        /// </summary>
+        /// <param name="httpWebRequest"></param>
         private static void GetAnswer(HttpWebRequest httpWebRequest)
         {
             var httpResponse = (HttpWebResponse) httpWebRequest.GetResponse();
@@ -116,6 +123,12 @@ namespace Client_CS_CLI
             if (result != "ok") Console.WriteLine("Something went wrong");
         }
 
+        /// <summary>
+        /// <para>Функция отправки сообщения на сервер</para>
+        /// </summary>
+        /// <param name="nick"></param>
+        /// <param name="msg"></param>
+        /// <param name="httpWebRequest"></param>
         private static void SendMessage(string nick, string msg, HttpWebRequest httpWebRequest)
         {
             var json = JsonConvert.SerializeObject(new Message {Name = nick, Msg = msg});
