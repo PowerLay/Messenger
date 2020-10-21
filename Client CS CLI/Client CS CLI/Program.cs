@@ -76,9 +76,10 @@ namespace Client_CS_CLI
 
                     Console.MoveBufferArea(0, y, x, 1, 0, messages.Count + 1);
 
+                    string history="";
+                    foreach (var message in messages) history += message.ToString().PadRight(Console.BufferWidth-1)+"\n";
                     Console.SetCursorPosition(0, 1);
-                    foreach (var message in messages) Console.WriteLine(message);
-
+                    Console.WriteLine(history);
                     Console.SetCursorPosition(x, messages.Count + 1);
 
                     _len = messages.Count;
@@ -88,11 +89,19 @@ namespace Client_CS_CLI
 
         private static void Post(string nick)
         {
+            Console.Write("Enter message(or /u for update)>        \b\b\b\b\b\b\b");
+            var msg = Console.ReadLine();
+            if (msg.Equals("/update") || msg.Equals("/u"))
+            {
+                UpdateHistory();
+                Console.SetCursorPosition(0, Console.CursorTop - 1);
+                return;
+            }
             var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://localhost:5000/api/Chat");
             httpWebRequest.ContentType = "application/json";
             httpWebRequest.Method = "POST";
 
-            SendMessage(nick, httpWebRequest);
+            SendMessage(nick,msg, httpWebRequest);
             GetAnswer(httpWebRequest);
         }
 
@@ -104,16 +113,8 @@ namespace Client_CS_CLI
             if (result != "ok") Console.WriteLine("Something went wrong");
         }
 
-        private static void SendMessage(string nick, HttpWebRequest httpWebRequest)
+        private static void SendMessage(string nick, string msg, HttpWebRequest httpWebRequest)
         {
-            Console.Write("Enter message(or /u for update)> ");
-            var msg = Console.ReadLine();
-            if (msg.Equals("/update") || msg.Equals("/u"))
-            {
-                UpdateHistory();
-                Console.SetCursorPosition(0,Console.CursorTop-1);
-                return;
-            }
             var json = JsonConvert.SerializeObject(new Message { Name = nick, Msg = msg });
             using var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream());
             streamWriter.Write(json);
