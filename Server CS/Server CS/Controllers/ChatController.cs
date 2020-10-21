@@ -21,6 +21,14 @@ namespace Messeger_Server.Controllers
         }
 
         // POST api/<ChatController>
+        /// <summary>
+        /// <para>Post function</para>
+        /// <br>Печать времени отправки сообщения</br>
+        /// <br>Добавление сообщения в глобальный массив сообщений</br>
+        /// <br>Сохранение массива сообщений в файл в виде json объекта</br>
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         [HttpPost]
         public string Post([FromBody] Message value)
         {
