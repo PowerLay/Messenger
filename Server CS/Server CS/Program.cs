@@ -1,19 +1,16 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 
 namespace Server_CS
 {
     public class Program
     {
         /// <summary>
-        /// <para>Глобальный объект сообщения, в котором хранятся все сообщения в чате</para>
+        ///     <para>Глобальный объект сообщения, в котором хранятся все сообщения в чате</para>
         /// </summary>
         public static List<Message> Messages = new List<Message>();
+
         public static void Main(string[] args)
         {
             Messages = JsonWorker.Load();
@@ -21,15 +18,14 @@ namespace Server_CS
         }
 
         /// <summary>
-        /// <para>Создание веб-сервера для обработки запросов</para>
+        ///     <para>Создание веб-сервера для обработки запросов</para>
         /// </summary>
         /// <param name="args"></param>
         /// <returns></returns>
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<Startup>();
-                });
+        public static IHostBuilder CreateHostBuilder(string[] args)
+        {
+            return Host.CreateDefaultBuilder(args)
+                .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); });
+        }
     }
 }
