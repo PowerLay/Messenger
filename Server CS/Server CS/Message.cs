@@ -4,7 +4,7 @@ namespace Server_CS
 {
     public class Message
     {
-        public DateTime TimesTamp { get; set; }
+        public int TimesTamp { get; set; }
         public string Name { get; set; }
         public string Text { get; set; }
 
