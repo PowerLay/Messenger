@@ -4,13 +4,13 @@ namespace Server_CS
 {
     public class Message
     {
-        public DateTime MsgTime { get; set; }
+        public DateTime TimesTamp { get; set; }
         public string Name { get; set; }
-        public string Msg { get; set; }
+        public string Text { get; set; }
 
         public override string ToString()
         {
-            return $"[{MsgTime}] {Name}: {Msg}";
+            return $"[{TimesTamp}] {Name}: {Text}";
         }
     }
 }

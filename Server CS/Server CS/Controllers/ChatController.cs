@@ -24,7 +24,7 @@ namespace Messeger_Server.Controllers
         [HttpPost]
         public string Post([FromBody] Message value)
         {
-            value.MsgTime = DateTime.Now;
+            value.TimesTamp = DateTime.Now;
             Console.WriteLine(value);
             Program.Messages.Add(value);
             JsonWorker.Save(Program.Messages);
