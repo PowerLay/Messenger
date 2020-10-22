@@ -11,7 +11,7 @@ namespace Server_CS
     /// </summary>
     public class Message
     {
-        public DateTime TimesTamp { get; set; }
+        public int TimesTamp { get; set; }
         public string Name { get; set; }
         public string Text { get; set; }
 
