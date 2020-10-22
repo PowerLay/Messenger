@@ -8,53 +8,49 @@ using System.Threading;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using Windows.Web.Http.Headers;
 using Newtonsoft.Json;
 
 // Документацию по шаблону элемента "Пустая страница" см. по адресу https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x419
 
 namespace CLient_CS_UWP
 {
+
+
     /// <summary>
     /// Пустая страница, которую можно использовать саму по себе или для перехода внутри фрейма.
     /// </summary>
     public sealed partial class MainPage : Page
     {
         private static int _len;
+        private static string prevRes = "";
 
         public MainPage()
         {
             this.InitializeComponent();
-            UpdateHistory();
             GetHistoryMessages();
             //ConfigManager.LoadConfig();
-
-           
         }
-        private async Task GetHistoryMessages()
+        private async void GetHistoryMessages() 
         {
+            //DateTime time = new DateTime();
             while (true)
             {
+                //if (time.AddMilliseconds(200) < DateTime.Now)
+                //{
                 await UpdateHistory();
+                //    time = DateTime.Now;
+                //}
+            }
+        }
 
-                Thread.Sleep(ConfigManager.config.MillisecondsSleep);
-            }
-        }
-        private void MessageBox_KeyDown(object sender, KeyRoutedEventArgs e)
-        {
-            if (e.Key == Windows.System.VirtualKey.Enter)
-            {
-                string nick = "TestNick";
-                Post(nick);
-                MessageBox.Text = "";
-            }
-        }
         public async Task<string> GetAsync(string uri)
         {
             var request = (HttpWebRequest)WebRequest.Create(uri);
@@ -71,7 +67,7 @@ namespace CLient_CS_UWP
         {
             var res = await GetAsync("http://localhost:5000/api/Chat");
 
-            if (res != "[]")
+            if (res != "[]" || res != prevRes)
             {
                 var messages = JsonConvert.DeserializeObject<List<Message>>(res);
 
@@ -79,10 +75,13 @@ namespace CLient_CS_UWP
                 {
                     for (int i = _len; i < messages.Count; i++)
                     {
-                        MessagesListViev.Items.Add(new TextBlock() { Text = messages[i].ToString() });
+                        MessagesListViev.Items.Add(messages[i].ToString());
+                        //MessagesListViev.Items.Add(new TextBlock() { Text = messages[i].ToString() });
                     }
+
                     _len = messages.Count;
                 }
+                prevRes = res;
             }
         }
         private void Post(string nick)
@@ -112,6 +111,16 @@ namespace CLient_CS_UWP
             streamWriter.Write(json);
             streamWriter.Close();
         }
-    }
 
+        private void MessageBox_KeyDown(object sender, Windows.UI.Xaml.Input.KeyRoutedEventArgs e)
+        {
+            if (e.Key == VirtualKey.Enter)
+            {
+                string nick = "Test";
+                Post(nick);
+                MessageBox.Text = "";
+            }
+        }
+
+    }
 }
