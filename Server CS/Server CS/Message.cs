@@ -11,13 +11,13 @@ namespace Server_CS
     /// </summary>
     public class Message
     {
-        public DateTime MsgTime { get; set; }
+        public int TimesTamp { get; set; }
         public string Name { get; set; }
-        public string Msg { get; set; }
+        public string Text { get; set; }
 
         public override string ToString()
         {
-            return $"[{MsgTime}] {Name}: {Msg}";
+            return $"[{ (new DateTime(1970, 1, 1, 0, 0, 0, 0)).AddSeconds(TimesTamp)}] {Name}: {Text}";
         }
     }
 }

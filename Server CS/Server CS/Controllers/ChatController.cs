@@ -32,7 +32,7 @@ namespace Messeger_Server.Controllers
         [HttpPost]
         public string Post([FromBody] Message value)
         {
-            value.MsgTime = DateTime.Now;
+            value.TimesTamp = (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds; ;
             Console.WriteLine(value);
             Program.Messages.Add(value);
             JsonWorker.Save(Program.Messages);
