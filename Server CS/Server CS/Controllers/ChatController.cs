@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Xml.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Server_CS;
 
@@ -12,7 +11,6 @@ namespace Messeger_Server.Controllers
     [ApiController]
     public class ChatController : ControllerBase
     {
-
         // GET: api/<ChatController>
         [HttpGet]
         public List<Message> Get()
@@ -22,17 +20,18 @@ namespace Messeger_Server.Controllers
 
         // POST api/<ChatController>
         /// <summary>
-        /// <para>Post function</para>
-        /// <br>Печать времени отправки сообщения</br>
-        /// <br>Добавление сообщения в глобальный массив сообщений</br>
-        /// <br>Сохранение массива сообщений в файл в виде json объекта</br>
+        ///     <para>Post function</para>
+        ///     <br>Печать времени отправки сообщения</br>
+        ///     <br>Добавление сообщения в глобальный массив сообщений</br>
+        ///     <br>Сохранение массива сообщений в файл в виде json объекта</br>
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
         [HttpPost]
         public string Post([FromBody] Message value)
         {
-            value.TimesTamp = (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds; ;
+            value.TimesTamp = (int) (DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
+            ;
             Console.WriteLine(value);
             Program.Messages.Add(value);
             JsonWorker.Save(Program.Messages);
