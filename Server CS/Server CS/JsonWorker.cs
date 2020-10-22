@@ -4,14 +4,15 @@ using Newtonsoft.Json;
 
 namespace Server_CS
 {
-    class JsonWorker
+    internal class JsonWorker
     {
         /// <summary>
-        /// Файл для сохранения сообщений в виде json массива
+        ///     Файл для сохранения сообщений в виде json массива
         /// </summary>
-        private static string path = @"messages.json";
+        private static readonly string path = @"messages.json";
+
         /// <summary>
-        /// Функция сохранения в файл
+        ///     Функция сохранения в файл
         /// </summary>
         /// <param name="messages"></param>
         public static void Save(List<Message> messages)
@@ -21,17 +22,17 @@ namespace Server_CS
         }
 
         /// <summary>
-        /// Функция загрузки сообщений из файла, десирилизованный из json в List <Message> объект
+        ///     Функция загрузки сообщений из файла, десирилизованный из json в List <Message> объект
         /// </summary>
         /// <returns></returns>
         public static List<Message> Load()
         {
-            List<Message> messages = new List<Message>();
+            var messages = new List<Message>();
             if (!File.Exists(path))
                 return messages;
             using (var streamReader = new StreamReader(path))
             {
-               messages = JsonConvert.DeserializeObject<List<Message>>(streamReader.ReadToEnd());
+                messages = JsonConvert.DeserializeObject<List<Message>>(streamReader.ReadToEnd());
             }
 
             return messages;

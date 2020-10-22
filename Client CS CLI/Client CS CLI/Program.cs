@@ -131,7 +131,7 @@ namespace Client_CS_CLI
         /// <param name="httpWebRequest"></param>
         private static void SendMessage(string nick, string msg, HttpWebRequest httpWebRequest)
         {
-            var json = JsonConvert.SerializeObject(new Message {Name = nick, Msg = msg});
+            var json = JsonConvert.SerializeObject(new Message {Name = nick, Text = msg});
             using var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream());
             streamWriter.Write(json);
             streamWriter.Close();
