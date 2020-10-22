@@ -10,7 +10,7 @@ namespace Server_CS
 
         public override string ToString()
         {
-            return $"[{TimesTamp}] {Name}: {Text}";
+            return $"[{ (new DateTime(1970, 1, 1, 0, 0, 0, 0)).AddSeconds(TimesTamp)}] {Name}: {Text}";
         }
     }
 }
