@@ -4,9 +4,9 @@ namespace Server_CS
 {
     /// <summary>
     /// <para>Класс Сообщение</para>
-    /// <br>MsgTime - время отправки сообщения (по серверу)</br>
+    /// <br>TimesTamp - время отправки сообщения (по серверу)</br>
     /// <br>Name - имя клиента</br>
-    /// <br>Msg - сообщение клиента</br>
+    /// <br>Text - сообщение клиента</br>
     /// <br>ToString - функция преобразования полей класса в строку для печати</br>
     /// </summary>
     public class Message
