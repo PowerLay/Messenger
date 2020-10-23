@@ -30,9 +30,16 @@ namespace Server_CS
             var messages = new List<Message>();
             if (!File.Exists(path))
                 return messages;
-            using (var streamReader = new StreamReader(path))
+            try
             {
-                messages = JsonConvert.DeserializeObject<List<Message>>(streamReader.ReadToEnd());
+                using (var streamReader = new StreamReader(path))
+                {
+                    messages = JsonConvert.DeserializeObject<List<Message>>(streamReader.ReadToEnd());
+                }
+            }
+            catch (System.Exception)
+            {
+                return messages;
             }
 
             return messages;
