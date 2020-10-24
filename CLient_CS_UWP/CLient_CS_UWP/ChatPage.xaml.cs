@@ -5,6 +5,7 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.System;
+using Windows.UI.ViewManagement.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -114,6 +115,12 @@ namespace CLient_CS_UWP
         {
             Post(ConfigManager.Config.Name);
             MessageBox.Text = "";
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Focus(FocusState.Programmatic);
+            CoreInputView.GetForCurrentView().TryShow(CoreInputViewKind.Emoji);
         }
     }
 }

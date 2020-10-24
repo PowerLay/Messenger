@@ -11,14 +11,17 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="233*"/>
-            <ColumnDefinition Width="35*"/>
+            <ColumnDefinition Width="120"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="933*"/>
             <RowDefinition Height="45"/>
         </Grid.RowDefinitions>
         <TextBox x:Name="MessageBox" PlaceholderText="Message" TextWrapping="Wrap" Grid.Row="1" Margin="5,7,5,7" AutomationProperties.HelpText="Message" KeyDown="MessageBox_KeyDown" />
-        <Button x:Name="SendButton" Content="Send" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" Margin="5,7,5,7" VerticalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" MinHeight="6" Click="SendButton_Click" />
+        <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" Margin="0,7,5,7" VerticalAlignment="Stretch"  MinHeight="6">
+            <Button Margin="0,0,5,0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinWidth="35" Content=":)" Click="Button_Click"/>
+            <Button x:Name="SendButton" Content="Send" HorizontalAlignment="Stretch" Margin="0" VerticalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" MinWidth="70" MinHeight="6" Click="SendButton_Click" />
+        </StackPanel>
         <ListView Name="MessagesListView" Grid.Row="0" Grid.ColumnSpan="2">
             <ListView.ItemsPanel>
                 <ItemsPanelTemplate>
