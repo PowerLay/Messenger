@@ -32,10 +32,10 @@ namespace CLient_CS_UWP
 
         public async Task<string> GetAsync(string uri)
         {
-            var request = (HttpWebRequest) WebRequest.Create(uri);
+            var request = (HttpWebRequest)WebRequest.Create(uri);
             request.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
 
-            using (var response = (HttpWebResponse) await request.GetResponseAsync())
+            using (var response = (HttpWebResponse)await request.GetResponseAsync())
             using (var stream = response.GetResponseStream())
             using (var reader = new StreamReader(stream))
             {
@@ -75,7 +75,7 @@ namespace CLient_CS_UWP
         {
             var msg = MessageBox.Text;
 
-            var httpWebRequest = (HttpWebRequest) WebRequest.Create("http://localhost:5000/api/Chat");
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://localhost:5000/api/Chat");
             httpWebRequest.ContentType = "application/json";
             httpWebRequest.Method = "POST";
 
@@ -85,7 +85,7 @@ namespace CLient_CS_UWP
 
         private void GetAnswer(HttpWebRequest httpWebRequest)
         {
-            var httpResponse = (HttpWebResponse) httpWebRequest.GetResponse();
+            var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
             var streamReader = new StreamReader(httpResponse.GetResponseStream());
             var result = streamReader.ReadToEnd();
             if (result != "ok") Console.WriteLine("Something went wrong");
@@ -93,7 +93,7 @@ namespace CLient_CS_UWP
 
         private static void SendMessage(string nick, string msg, HttpWebRequest httpWebRequest)
         {
-            var json = JsonConvert.SerializeObject(new Message {Name = nick, Text = msg});
+            var json = JsonConvert.SerializeObject(new Message { Name = nick, Text = msg });
             var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream());
             streamWriter.Write(json);
             streamWriter.Close();

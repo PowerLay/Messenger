@@ -24,7 +24,7 @@ namespace CLient_CS_UWP
             while (true)
             {
                 await GetHistory();
-                Thread.Sleep(ConfigManager.config.MillisecondsSleep);
+                Thread.Sleep(ConfigManager.Config.MillisecondsSleep);
             }
         }
     }
