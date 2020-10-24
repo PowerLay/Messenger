@@ -5,7 +5,6 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.System;
-using Windows.UI.Core;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Newtonsoft.Json;
@@ -14,30 +13,6 @@ using Newtonsoft.Json;
 
 namespace CLient_CS_UWP
 {
-    internal class ServerResponse
-    {
-        private readonly MainPage mainPage;
-
-        public ServerResponse(MainPage mp)
-        {
-            mainPage = mp;
-        }
-
-        private async Task GetHistory()
-        {
-            await mainPage.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { mainPage.UpdateHistory(); });
-        }
-
-        public async void Start()
-        {
-            while (true)
-            {
-                await GetHistory();
-                Thread.Sleep(200);
-            }
-        }
-    }
-
     /// <summary>
     ///     Пустая страница, которую можно использовать саму по себе или для перехода внутри фрейма.
     /// </summary>
@@ -52,7 +27,7 @@ namespace CLient_CS_UWP
             var sr = new ServerResponse(this);
             var updaterThread = new Thread(sr.Start);
             updaterThread.Start();
-            //ConfigManager.LoadConfig();
+            ConfigManager.LoadConfig();
         }
 
         public async Task<string> GetAsync(string uri)
@@ -87,7 +62,7 @@ namespace CLient_CS_UWP
                 if (_len != messages.Count)
                 {
                     for (var i = _len; i < messages.Count; i++)
-                        MessagesListViev.Items.Add(messages[i].ToString());
+                        MessagesListView.Items.Add(messages[i].ToString());
 
                     _len = messages.Count;
                 }
@@ -128,10 +103,17 @@ namespace CLient_CS_UWP
         {
             if (e.Key == VirtualKey.Enter)
             {
-                var nick = "Test";
+                var nick = "Test1";
                 Post(nick);
                 MessageBox.Text = "";
             }
+        }
+
+        private void SendButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            var nick = "Test2";
+            Post(nick);
+            MessageBox.Text = "";
         }
     }
 }
