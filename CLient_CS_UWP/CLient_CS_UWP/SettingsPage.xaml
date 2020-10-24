@@ -5,7 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" LosingFocus="Page_LosingFocus">
 
     <Grid>
         <Grid.ChildrenTransitions>
@@ -37,20 +37,29 @@
             IsTabStop="False"
             UseSystemFocusVisuals="False"
             VerticalScrollBarVisibility="Auto"
-            VerticalScrollMode="Auto" LostFocus="contentSV_LostFocus">
+            VerticalScrollMode="Auto">
             <StackPanel HorizontalAlignment="Left">
                 <TextBlock
                     Style="{StaticResource TitleTextBlockStyle}"
                     Margin="0,4,0,0"
                     FontWeight="Normal"
-                    Text="Theme Mode" />
-                <StackPanel x:Name="General" Margin="0,10,0,0">
+                    Text="General" />
+                <StackPanel Margin="0,10,0,0">
                     <TextBox Name="NickTexBox" Header="Enter your nick:" PlaceholderText="Nick"
                              TextChanged="NickTexBox_OnTextChanged" />
                     <Slider Name="MillisecondsSleepSlider" Header="Chat refresh rate" Width="200" Minimum="0"
                             Maximum="1000" StepFrequency="10"
                             SmallChange="10" LargeChange="100" Value="200"
                             ValueChanged="MillisecondsSleepSlider_OnValueChanged" />
+                </StackPanel>
+                <TextBlock
+                    Style="{StaticResource TitleTextBlockStyle}"
+                    Margin="0,4,0,0"
+                    FontWeight="Normal"
+                    Text="Start window size" />
+                <StackPanel Orientation="Horizontal">
+                    <TextBox Name="WindowW" HorizontalAlignment="Left" Header="Width" TextChanged="WindowW_TextChanged"/>
+                    <TextBox Name="WindowH" HorizontalAlignment="Right" Header="Heigth" TextChanged="WindowH_OnTextChanged"  Margin="5,0,0,0"/>
                 </StackPanel>
             </StackPanel>
         </ScrollViewer>

@@ -1,5 +1,7 @@
 ﻿using System;
+using Windows.Foundation;
 using System.IO;
+using System.Threading.Tasks;
 using Windows.Storage;
 using Newtonsoft.Json;
 
@@ -13,11 +15,19 @@ namespace CLient_CS_UWP
         public static async void WriteConfig()
         {
             // Create sample file; replace if exists.
-            var storageFolder =
-                ApplicationData.Current.LocalFolder;
-            var sampleFile =
-                await storageFolder.CreateFileAsync(Path,
-                    CreationCollisionOption.ReplaceExisting);
+            StorageFile sampleFile;
+            try
+            {
+                var storageFolder =
+                        ApplicationData.Current.LocalFolder;
+                sampleFile =
+                    await storageFolder.CreateFileAsync(Path,
+                        CreationCollisionOption.ReplaceExisting);
+            }
+            catch (Exception)
+            {
+                return;
+            }
 
             var stream = await sampleFile.OpenStreamForWriteAsync();
             using (var streamWriter = new StreamWriter(stream))
@@ -26,7 +36,7 @@ namespace CLient_CS_UWP
             }
         }
 
-        public static async void LoadConfig()
+        public static async Task LoadConfig()
         {
             var text = "";
             try
@@ -53,5 +63,6 @@ namespace CLient_CS_UWP
     {
         public int MillisecondsSleep { get; set; } = 200;
         public string Name { get; set; } = "anonymous";
+        public Size Size { get; set; } = new Size(480, 800);
     }
 }
