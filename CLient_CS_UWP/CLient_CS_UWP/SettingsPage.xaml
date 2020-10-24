@@ -2,35 +2,34 @@
     x:Class="CLient_CS_UWP.SettingsPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:CLient_CS_UWP"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-        <Grid>
-            <Grid.ChildrenTransitions>
-                <TransitionCollection>
-                    <EntranceThemeTransition />
-                </TransitionCollection>
-            </Grid.ChildrenTransitions>
-            <VisualStateManager.VisualStateGroups>
-                <VisualStateGroup>
-                    <VisualState x:Name="WideLayout">
-                        <VisualState.StateTriggers>
-                            <AdaptiveTrigger MinWindowWidth="{StaticResource Breakpoint640Plus}" />
-                        </VisualState.StateTriggers>
-                    </VisualState>
-                    <VisualState x:Name="NarrowLayout">
-                        <VisualState.StateTriggers>
-                            <AdaptiveTrigger MinWindowWidth="0" />
-                        </VisualState.StateTriggers>
-                        <VisualState.Setters>
-                            <Setter Target="contentSV.Padding" Value="14,0" />
-                        </VisualState.Setters>
-                    </VisualState>
-                </VisualStateGroup>
-            </VisualStateManager.VisualStateGroups>
+    <Grid>
+        <Grid.ChildrenTransitions>
+            <TransitionCollection>
+                <EntranceThemeTransition />
+            </TransitionCollection>
+        </Grid.ChildrenTransitions>
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState x:Name="WideLayout">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="{StaticResource Breakpoint640Plus}" />
+                    </VisualState.StateTriggers>
+                </VisualState>
+                <VisualState x:Name="NarrowLayout">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="0" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="contentSV.Padding" Value="14,0" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
         <ScrollViewer
             x:Name="contentSV"
             Grid.Row="1"
@@ -46,12 +45,15 @@
                     FontWeight="Normal"
                     Text="Theme Mode" />
                 <StackPanel x:Name="General" Margin="0,10,0,0">
-                    <TextBox Name="NickTexBox" Header="Enter your nick:" PlaceholderText="Nick" TextChanged="NickTexBox_OnTextChanged"/>
-                    <Slider Name="MillisecondsSleepSlider" Header="Chat refresh rate" Width="200" Minimum="0" Maximum="1000" StepFrequency="10"
-                            SmallChange="10" LargeChange="100" Value="200" ValueChanged="MillisecondsSleepSlider_OnValueChanged"/>
+                    <TextBox Name="NickTexBox" Header="Enter your nick:" PlaceholderText="Nick"
+                             TextChanged="NickTexBox_OnTextChanged" />
+                    <Slider Name="MillisecondsSleepSlider" Header="Chat refresh rate" Width="200" Minimum="0"
+                            Maximum="1000" StepFrequency="10"
+                            SmallChange="10" LargeChange="100" Value="200"
+                            ValueChanged="MillisecondsSleepSlider_OnValueChanged" />
                 </StackPanel>
             </StackPanel>
         </ScrollViewer>
-        
-        </Grid>
+
+    </Grid>
 </Page>
