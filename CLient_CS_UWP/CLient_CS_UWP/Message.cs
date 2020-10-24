@@ -10,7 +10,7 @@ namespace CLient_CS_UWP
 
         public override string ToString()
         {
-            return $"[{(new DateTime(1970, 1, 1, 0, 0, 0, 0)).AddSeconds(Ts)}] {Name}: {Text}";
+            return $"[{new DateTime(1970, 1, 1, 0, 0, 0, 0).AddSeconds(Ts)}] {Name}: {Text}";
         }
     }
 }

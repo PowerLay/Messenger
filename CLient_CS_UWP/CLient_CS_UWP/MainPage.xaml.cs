@@ -1,13 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Net;
-using System.Threading;
-using System.Threading.Tasks;
-using Windows.System;
+﻿using System.Linq;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Input;
-using Newtonsoft.Json;
 
 // Документацию по шаблону элемента "Пустая страница" см. по адресу https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x419
 
@@ -18,102 +10,26 @@ namespace CLient_CS_UWP
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        private static int _len;
-        private static string prevRes = "";
-
         public MainPage()
         {
             InitializeComponent();
-            var sr = new ServerResponse(this);
-            var updaterThread = new Thread(sr.Start);
-            updaterThread.Start();
+            nvMain.SelectedItem = nvMain.MenuItems.OfType<NavigationViewItem>().First();
             ConfigManager.LoadConfig();
         }
 
-        public async Task<string> GetAsync(string uri)
+        private void NavigationView_SelectionChanged(NavigationView sender,
+            NavigationViewSelectionChangedEventArgs args)
         {
-            var request = (HttpWebRequest)WebRequest.Create(uri);
-            request.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
-
-            using (var response = (HttpWebResponse)await request.GetResponseAsync())
-            using (var stream = response.GetResponseStream())
-            using (var reader = new StreamReader(stream))
+            if (args.IsSettingsSelected)
             {
-                return await reader.ReadToEndAsync();
+                ContentFrame.Navigate(typeof(SettingsPage));
             }
-        }
-
-        public async void UpdateHistory()
-        {
-            string res;
-            try
+            else
             {
-                res = await GetAsync("http://localhost:5000/api/Chat");
+                var selectedItem = (NavigationViewItem) args.SelectedItem;
+                if (selectedItem == null) return;
+                if (((string) selectedItem.Tag).Equals("ChatPage")) ContentFrame.Navigate(typeof(ChatPage));
             }
-            catch (Exception)
-            {
-                return;
-            }
-
-            if (res != "[]" || res != prevRes)
-            {
-                var messages = JsonConvert.DeserializeObject<List<Message>>(res);
-
-                if (_len != messages.Count)
-                {
-                    for (var i = _len; i < messages.Count; i++)
-                        MessagesListView.Items.Add(messages[i].ToString());
-
-                    _len = messages.Count;
-                }
-
-                prevRes = res;
-            }
-        }
-
-        private void Post(string nick)
-        {
-            var msg = MessageBox.Text;
-
-            var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://localhost:5000/api/Chat");
-            httpWebRequest.ContentType = "application/json";
-            httpWebRequest.Method = "POST";
-
-            SendMessage(nick, msg, httpWebRequest);
-            GetAnswer(httpWebRequest);
-        }
-
-        private void GetAnswer(HttpWebRequest httpWebRequest)
-        {
-            var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
-            var streamReader = new StreamReader(httpResponse.GetResponseStream());
-            var result = streamReader.ReadToEnd();
-            if (result != "ok") Console.WriteLine("Something went wrong");
-        }
-
-        private static void SendMessage(string nick, string msg, HttpWebRequest httpWebRequest)
-        {
-            var json = JsonConvert.SerializeObject(new Message { Name = nick, Text = msg });
-            var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream());
-            streamWriter.Write(json);
-            streamWriter.Close();
-        }
-
-        private void MessageBox_KeyDown(object sender, KeyRoutedEventArgs e)
-        {
-            if (e.Key == VirtualKey.Enter)
-            {
-                var nick = "Test1";
-                Post(nick);
-                MessageBox.Text = "";
-            }
-        }
-
-        private void SendButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
-        {
-            var nick = "Test2";
-            Post(nick);
-            MessageBox.Text = "";
         }
     }
 }

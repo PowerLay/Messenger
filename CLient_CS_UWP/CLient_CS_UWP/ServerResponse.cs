@@ -7,16 +7,16 @@ namespace CLient_CS_UWP
 {
     internal class ServerResponse
     {
-        private readonly MainPage mainPage;
+        private readonly ChatPage _chatPage;
 
-        public ServerResponse(MainPage mp)
+        public ServerResponse(ChatPage cp)
         {
-            mainPage = mp;
+            _chatPage = cp;
         }
 
         private async Task GetHistory()
         {
-            await mainPage.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { mainPage.UpdateHistory(); });
+            await _chatPage.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { _chatPage.UpdateHistory(); });
         }
 
         public async void Start()

@@ -1,0 +1,30 @@
+﻿<Page
+    x:Class="CLient_CS_UWP.ChatPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:CLient_CS_UWP"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="233*"/>
+            <ColumnDefinition Width="35*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="933*"/>
+            <RowDefinition Height="45"/>
+        </Grid.RowDefinitions>
+        <TextBox x:Name="MessageBox" PlaceholderText="Message" TextWrapping="Wrap" Grid.Row="1" Margin="5,7,5,7" AutomationProperties.HelpText="Message" KeyDown="MessageBox_KeyDown" />
+        <Button x:Name="SendButton" Content="Send" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" Margin="5,7,5,7" VerticalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" MinHeight="6" Click="SendButton_Click" />
+        <ListView Name="MessagesListView" Grid.Row="0" Grid.ColumnSpan="2">
+            <ListView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <ItemsStackPanel ItemsUpdatingScrollMode="KeepLastItemInView" />
+                </ItemsPanelTemplate>
+            </ListView.ItemsPanel>
+        </ListView>
+    </Grid>
+</Page>
