@@ -16,15 +16,9 @@ namespace CLient_CS_UWP
         public SettingsPage()
         {
             InitializeComponent();
-            NickTexBox.Text = ConfigManager.Config.Name;
             MillisecondsSleepSlider.Value = ConfigManager.Config.MillisecondsSleep;
             WindowW.Text = ConfigManager.Config.Size.Width.ToString();
             WindowH.Text = ConfigManager.Config.Size.Height.ToString();
-        }
-
-        private void NickTexBox_OnTextChanged(object sender, TextChangedEventArgs e)
-        {
-            ConfigManager.Config.Name = NickTexBox.Text;
         }
 
         private void MillisecondsSleepSlider_OnValueChanged(object sender, RangeBaseValueChangedEventArgs e)

@@ -17,6 +17,7 @@
                     SelectionFollowsFocus="Disabled"
                     IsTabStop="False">
         <NavigationView.MenuItems>
+            <NavigationViewItem Content="Login" Tag="LoginPage" x:Name="LoginPageNv" />
             <NavigationViewItem Content="Chat" Tag="ChatPage" x:Name="ChatPageNv" />
         </NavigationView.MenuItems>
 

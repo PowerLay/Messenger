@@ -1,18 +1,14 @@
 ﻿<Page
-    x:Class="CLient_CS_UWP.SettingsPage"
+    x:Class="CLient_CS_UWP.LoginPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:CLient_CS_UWP"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" LosingFocus="Page_LosingFocus">
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-        <Grid.ChildrenTransitions>
-            <TransitionCollection>
-                <EntranceThemeTransition />
-            </TransitionCollection>
-        </Grid.ChildrenTransitions>
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
                 <VisualState x:Name="WideLayout">
@@ -42,23 +38,10 @@
                 <TextBlock
                     Style="{StaticResource TitleTextBlockStyle}"
                     Margin="0,4,0,0"
-                    FontWeight="Normal"
-                    Text="General" />
-                <StackPanel Margin="0,10,0,0">
-                    <Slider Name="MillisecondsSleepSlider" Header="Chat refresh rate" Width="200" Minimum="0"
-                            Maximum="1000" StepFrequency="10"
-                            SmallChange="10" LargeChange="100" 
-                            ValueChanged="MillisecondsSleepSlider_OnValueChanged" />
-                </StackPanel>
-                <TextBlock
-                    Style="{StaticResource TitleTextBlockStyle}"
-                    Margin="0,4,0,0"
-                    FontWeight="Normal"
-                    Text="Start window size" />
-                <StackPanel Orientation="Horizontal">
-                    <TextBox Name="WindowW" HorizontalAlignment="Left" Header="Width" TextChanged="WindowW_TextChanged"/>
-                    <TextBox Name="WindowH" HorizontalAlignment="Right" Header="Heigth" TextChanged="WindowH_OnTextChanged"  Margin="5,0,0,0"/>
-                </StackPanel>
+                    Text="Login/Register" />
+                <TextBox Name="LoginBox" PlaceholderText="Nickname"/>
+                <PasswordBox Name="PasswordBox" PlaceholderText="Password"/>
+                <Button Content="Login" HorizontalAlignment="Center" Click="ButtonBase_OnClick"/>
             </StackPanel>
         </ScrollViewer>
     </Grid>

@@ -74,7 +74,7 @@ namespace CLient_CS_UWP
             prevRes = res;
         }
 
-        private void Post(string nick)
+        private void Post()
         {
             var msg = MessageBox.Text;
 
@@ -82,7 +82,7 @@ namespace CLient_CS_UWP
             httpWebRequest.ContentType = "application/json";
             httpWebRequest.Method = "POST";
 
-            SendMessage(nick, msg, httpWebRequest);
+            SendMessage(ConfigManager.Config.RegData.Username, msg, httpWebRequest);
             GetAnswer(httpWebRequest);
         }
 
@@ -106,14 +106,14 @@ namespace CLient_CS_UWP
         {
             if (e.Key == VirtualKey.Enter)
             {
-                Post(ConfigManager.Config.Name);
+                Post();
                 MessageBox.Text = "";
             }
         }
 
         private void SendButton_Click(object sender, RoutedEventArgs e)
         {
-            Post(ConfigManager.Config.Name);
+            Post();
             MessageBox.Text = "";
         }
 
