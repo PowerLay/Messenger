@@ -1,7 +1,7 @@
 ﻿using System;
-using Windows.Foundation;
 using System.IO;
 using System.Threading.Tasks;
+using Windows.Foundation;
 using Windows.Storage;
 using Newtonsoft.Json;
 
@@ -19,7 +19,7 @@ namespace CLient_CS_UWP
             try
             {
                 var storageFolder =
-                        ApplicationData.Current.LocalFolder;
+                    ApplicationData.Current.LocalFolder;
                 sampleFile =
                     await storageFolder.CreateFileAsync(Path,
                         CreationCollisionOption.ReplaceExisting);
@@ -62,10 +62,11 @@ namespace CLient_CS_UWP
     public class Config
     {
         public int MillisecondsSleep { get; set; } = 200;
-        public RegData RegData { get; set; } = new RegData() { Username = "Anonymous", Password = "password" };
+        public RegData RegData { get; set; } = new RegData {Username = "Anonymous", Password = "password"};
         public Size Size { get; set; } = new Size(480, 800);
         public string Token { get; set; }
     }
+
     public class RegData
     {
         public string Username { get; set; }
