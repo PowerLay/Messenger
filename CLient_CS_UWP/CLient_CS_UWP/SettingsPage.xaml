@@ -49,7 +49,7 @@
                              TextChanged="NickTexBox_OnTextChanged" />
                     <Slider Name="MillisecondsSleepSlider" Header="Chat refresh rate" Width="200" Minimum="0"
                             Maximum="1000" StepFrequency="10"
-                            SmallChange="10" LargeChange="100" Value="200"
+                            SmallChange="10" LargeChange="100" 
                             ValueChanged="MillisecondsSleepSlider_OnValueChanged" />
                 </StackPanel>
                 <TextBlock
@@ -63,6 +63,5 @@
                 </StackPanel>
             </StackPanel>
         </ScrollViewer>
-
     </Grid>
 </Page>
