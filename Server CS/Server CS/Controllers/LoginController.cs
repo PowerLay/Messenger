@@ -33,6 +33,8 @@ namespace Server_CS.Controllers
 
             if (user == null) return response;
 
+            JsonWorker.Save(Program.RegDatas);
+
             var tokenString = GenerateJSONWebToken(user);
             response = Ok(new { token = tokenString });
 
