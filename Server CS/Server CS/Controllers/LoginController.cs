@@ -63,7 +63,7 @@ namespace Server_CS.Controllers
         {
             RegData user = null;
 
-            if (Program.RegDatas.Find(regData => regData.Username == login.Username)!=default)
+            if (Program.RegDatas.Find(regData => regData.Username == login.Username)==default)
             {
                 Program.RegDatas.Add(login);
                 return login;

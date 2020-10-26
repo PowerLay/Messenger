@@ -14,14 +14,13 @@ namespace CLient_CS_UWP
         public MainPage()
         {
             InitializeComponent();
-            nvMain.SelectedItem = nvMain.MenuItems.OfType<NavigationViewItem>().First();
-            ChageWindowSize();
+            Load();
         }
 
-        private static async void ChageWindowSize()
+        private async void Load()
         {
             await ConfigManager.LoadConfig();
-
+            nvMain.SelectedItem = nvMain.MenuItems.OfType<NavigationViewItem>().First();
             ApplicationView.PreferredLaunchViewSize = ConfigManager.Config.Size;
             ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
         }

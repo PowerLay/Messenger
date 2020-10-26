@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Server_CS;
 
@@ -27,12 +28,14 @@ namespace Messeger_Server.Controllers
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
+        [Authorize]
         [HttpPost]
         public string Post([FromBody] Message value)
         {
             value.Ts = (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds; ;
-            Console.WriteLine(value);
-            Program.Messages.Add(value);
+            Message msg = new Message() { Name = User.Identity.Name, Text = value.Text, Ts = value.Ts };
+            Console.WriteLine(msg);
+            Program.Messages.Add(msg);
             JsonWorker.Save(Program.Messages);
             return "ok";
         }

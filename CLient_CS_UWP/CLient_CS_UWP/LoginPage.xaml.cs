@@ -54,12 +54,22 @@ namespace CLient_CS_UWP
             catch (Exception exception)
             {
                 WarningText.Text = "Unauthorized";
+                return;
             }
 
-            ConfigManager.Config.Token = result;
+            var temp = JsonConvert.DeserializeObject<TokenResponse>(result);
+
+
+            ConfigManager.Config.Token = temp.Token;
 
             ConfigManager.Config.RegData = regData;
             WarningText.Text = "Success!";
+            ConfigManager.WriteConfig();
+        }
+
+        class TokenResponse
+        {
+            public string Token { get; set; } = "";
         }
     }
 }
