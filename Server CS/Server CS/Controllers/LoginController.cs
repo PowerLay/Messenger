@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -30,11 +31,10 @@ namespace Server_CS.Controllers
             IActionResult response = Unauthorized();
             var user = AuthenticateUser(login);
 
-            if (user != null)
-            {
-                var tokenString = GenerateJSONWebToken(user);
-                response = Ok(new { token = tokenString });
-            }
+            if (user == null) return response;
+
+            var tokenString = GenerateJSONWebToken(user);
+            response = Ok(new { token = tokenString });
 
             return response;
         }
@@ -44,9 +44,15 @@ namespace Server_CS.Controllers
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimsIdentity.DefaultNameClaimType, userInfo.Username),
+                new Claim(ClaimsIdentity.DefaultRoleClaimType, userInfo.Password)
+            };
+
             var token = new JwtSecurityToken(_config["Jwt:Issuer"],
                 _config["Jwt:Issuer"],
-                null,
+                claims,
                 expires: DateTime.Now.AddMinutes(120),
                 signingCredentials: credentials);
 
@@ -57,12 +63,17 @@ namespace Server_CS.Controllers
         {
             RegData user = null;
 
-            //Validate the User Credentials    
-            //Demo Purpose, I have Passed HardCoded User Information    
-            if (login.Username == "Jignesh")
+            if (Program.RegDatas.Find(regData => regData.Username == login.Username)!=default)
             {
-                user = new RegData { Username = "Jignesh Trivedi"};
+                Program.RegDatas.Add(login);
+                return login;
             }
+
+            foreach (var regData in Program.RegDatas.Where(regData => regData.Username == login.Username && regData.Password == login.Password))
+            {
+                return regData;
+            }
+
             return user;
         }
     }

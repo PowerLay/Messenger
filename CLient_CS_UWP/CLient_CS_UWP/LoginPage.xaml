@@ -42,6 +42,7 @@
                 <TextBox Name="LoginBox" PlaceholderText="Nickname"/>
                 <PasswordBox Name="PasswordBox" PlaceholderText="Password"/>
                 <Button Content="Login" HorizontalAlignment="Center" Click="ButtonBase_OnClick"/>
+                <TextBlock Text="" HorizontalAlignment="Center" Name="WarningText"/>
             </StackPanel>
         </ScrollViewer>
     </Grid>

@@ -62,8 +62,9 @@ namespace CLient_CS_UWP
     public class Config
     {
         public int MillisecondsSleep { get; set; } = 200;
-        public RegData RegData { get; set; } = new RegData(){Username = "Anonymous", Password = "password"};
+        public RegData RegData { get; set; } = new RegData() { Username = "Anonymous", Password = "password" };
         public Size Size { get; set; } = new Size(480, 800);
+        public string Token { get; set; }
     }
     public class RegData
     {
