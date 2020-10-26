@@ -14,7 +14,7 @@ namespace Server_CS
 
         public static void Main(string[] args)
         {
-            Messages = JsonWorker.Load();
+            JsonWorker.Load();
             CreateHostBuilder(args).Build().Run();
         }
 
