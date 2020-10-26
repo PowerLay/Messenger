@@ -1,34 +1,33 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using Newtonsoft.Json;
 
 namespace Client_CS_CLI
 {
     internal class ConfigManager
     {
-        protected static Config config = new Config();
+        private const string Path = @"config.json";
+        protected static Config Config = new Config();
+
+        public static async void WriteConfig()
+        {
+            await using var streamWriter = new StreamWriter(Path);
+            await streamWriter.WriteAsync(JsonConvert.SerializeObject(Config));
+        }
 
         /// <summary>
         /// <para>Функция загрузки данных о пользователе из конфиг файла json</para>
         /// <br>по стандарту: {"MillisecondsSleep":200,"AskNick":true,"Name":"anonymous"}</br>
         /// </summary>
-        protected static void LoadConfig()
+        protected static async void LoadConfig()
         {
-            var path = @"config.json";
-
-            if (!File.Exists(path))
+            if (!File.Exists(Path))
             {
-                using (var streamWriter = new StreamWriter(path))
-                {
-                    streamWriter.Write(JsonConvert.SerializeObject(config));
-                }
-
-                return;
+                WriteConfig();
             }
 
-            using (var streamReader = new StreamReader(path))
-            {
-                config = JsonConvert.DeserializeObject<Config>(streamReader.ReadToEnd());
-            }
+            using var streamReader = new StreamReader(Path);
+            Config = JsonConvert.DeserializeObject<Config>(streamReader.ReadToEnd());
         }
     }
     /// <summary>
@@ -40,8 +39,12 @@ namespace Client_CS_CLI
     internal class Config
     {
         public int MillisecondsSleep { get; set; } = 200;
-        public bool AskNick { get; set; } = true;
-        public string Name { get; set; } = "anonymous";
-
+        public RegData RegData { get; set; } = new RegData() { Username = "Anonymous", Password = "password" };
+        public string Token { get; set; }
+    }
+    public class RegData
+    {
+        public string Username { get; set; }
+        public string Password { get; set; }
     }
 }

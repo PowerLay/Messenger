@@ -2,6 +2,13 @@
 
 namespace CLient_CS_UWP
 {
+    /// <summary>
+    /// <para>Класс Сообщение</para>
+    /// <br>Ts - время отправки сообщения (по серверу)</br>
+    /// <br>Name - имя клиента</br>
+    /// <br>Text - сообщение клиента</br>
+    /// <br>ToString - функция преобразования полей класса в строку для печати</br>
+    /// </summary>
     public class Message
     {
         public int Ts { get; set; }

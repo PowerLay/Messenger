@@ -15,36 +15,74 @@ namespace Client_CS_CLI
         private static void Main(string[] args)
         {
             LoadConfig();
-            string nick;
-            if (config.AskNick)
+
+            do
             {
+                Console.Write("Enter your nick> ".PadRight(Console.BufferWidth - 1));
+                Console.Write("".PadRight(Console.BufferWidth - 1));
+                Console.SetCursorPosition(0, 0);
                 Console.Write("Enter your nick> ");
-                nick = Console.ReadLine();
-            }
-            else
-            {
-                nick = config.Name;
-                Console.WriteLine($"Your nick: {nick}. (Check config.json)");
-            }
+                var nick = Console.ReadLine();
+                Console.Write("Enter your password> ");
+                var password = Console.ReadLine();
+                var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://localhost:5000/api/Login");
+                httpWebRequest.ContentType = "application/json";
+                httpWebRequest.Method = "POST";
+
+                var regData = new RegData() { Username = nick, Password = password };
+                var json = JsonConvert.SerializeObject(regData);
+                var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream());
+                streamWriter.Write(json);
+                streamWriter.Close();
+
+                string result = "";
+
+                try
+                {
+                    var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+                    var streamReader = new StreamReader(httpResponse.GetResponseStream());
+                    result = streamReader.ReadToEnd();
+                }
+                catch (Exception)
+                {
+                    Console.SetCursorPosition(0, 0);
+                    continue;
+                }
+
+                var temp = JsonConvert.DeserializeObject<TokenResponse>(result);
+
+
+                ConfigManager.Config.Token = temp.Token;
+
+                ConfigManager.Config.RegData = regData;
+                Console.WriteLine("Success!");
+                ConfigManager.WriteConfig();
+                break;
+            } while (true);
+
 
             while (true)
                 try
                 {
                     GetHistoryMessages();
-                    while (true) Post(nick);
+                    while (true) Post();
                 }
                 catch (Exception)
                 {
                     // ignored
                 }
         }
+        class TokenResponse
+        {
+            public string Token { get; set; } = "";
+        }
 
         public static async Task<string> GetAsync(string uri)
         {
-            var request = (HttpWebRequest) WebRequest.Create(uri);
+            var request = (HttpWebRequest)WebRequest.Create(uri);
             request.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
 
-            using (var response = (HttpWebResponse) await request.GetResponseAsync())
+            using (var response = (HttpWebResponse)await request.GetResponseAsync())
             using (var stream = response.GetResponseStream())
             using (var reader = new StreamReader(stream))
             {
@@ -58,7 +96,7 @@ namespace Client_CS_CLI
             {
                 await UpdateHistory();
 
-                Thread.Sleep(config.MillisecondsSleep);
+                Thread.Sleep(Config.MillisecondsSleep);
             }
         }
 
@@ -91,8 +129,7 @@ namespace Client_CS_CLI
         /// <summary>
         /// <para>Функция ввода и печати сообщения в час (отправляется POST запрос на сервер)</para>
         /// </summary>
-        /// <param name="nick"></param>
-        private static void Post(string nick)
+        private static void Post()
         {
             Console.Write("Enter message(or /u for update)>        \b\b\b\b\b\b\b");
             var msg = Console.ReadLine();
@@ -103,11 +140,12 @@ namespace Client_CS_CLI
                 return;
             }
 
-            var httpWebRequest = (HttpWebRequest) WebRequest.Create("http://localhost:5000/api/Chat");
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://localhost:5000/api/Chat");
             httpWebRequest.ContentType = "application/json";
             httpWebRequest.Method = "POST";
+            httpWebRequest.Headers.Add("Authorization", "Bearer " + Config.Token);
 
-            SendMessage(nick, msg, httpWebRequest);
+            SendMessage(msg, httpWebRequest);
             GetAnswer(httpWebRequest);
         }
 
@@ -117,7 +155,7 @@ namespace Client_CS_CLI
         /// <param name="httpWebRequest"></param>
         private static void GetAnswer(HttpWebRequest httpWebRequest)
         {
-            var httpResponse = (HttpWebResponse) httpWebRequest.GetResponse();
+            var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
             using var streamReader = new StreamReader(httpResponse.GetResponseStream());
             var result = streamReader.ReadToEnd();
             if (result != "ok") Console.WriteLine("Something went wrong");
@@ -126,12 +164,11 @@ namespace Client_CS_CLI
         /// <summary>
         /// <para>Функция отправки сообщения на сервер</para>
         /// </summary>
-        /// <param name="nick"></param>
         /// <param name="msg"></param>
         /// <param name="httpWebRequest"></param>
-        private static void SendMessage(string nick, string msg, HttpWebRequest httpWebRequest)
+        private static void SendMessage(string msg, HttpWebRequest httpWebRequest)
         {
-            var json = JsonConvert.SerializeObject(new Message {Name = nick, Text = msg});
+            var json = JsonConvert.SerializeObject(new Message { Text = msg });
             using var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream());
             streamWriter.Write(json);
             streamWriter.Close();
