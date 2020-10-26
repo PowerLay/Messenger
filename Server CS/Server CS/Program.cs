@@ -9,11 +9,12 @@ namespace Server_CS
         /// <summary>
         ///     <para>Глобальный объект сообщения, в котором хранятся все сообщения в чате</para>
         /// </summary>
+        public static List<RegData> RegDatas = new List<RegData>();
         public static List<Message> Messages = new List<Message>();
 
         public static void Main(string[] args)
         {
-            Messages = JsonWorker.Load();
+            JsonWorker.Load();
             CreateHostBuilder(args).Build().Run();
         }
 

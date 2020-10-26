@@ -1,42 +1,74 @@
 ﻿using System;
-using System.Collections.Generic;
+using Windows.Foundation;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using Windows.Storage;
 using Newtonsoft.Json;
 
 namespace CLient_CS_UWP
 {
     public class ConfigManager
     {
-        public static Config config = new Config();
+        private const string Path = @"config.json";
+        public static Config Config = new Config();
 
-        public static void LoadConfig()
+        public static async void WriteConfig()
         {
-            var path = @"C:\config.json";
-
-            if (!File.Exists(path))
+            // Create sample file; replace if exists.
+            StorageFile sampleFile;
+            try
             {
-                using (var streamWriter = new StreamWriter(path))
-                {
-                    streamWriter.Write(JsonConvert.SerializeObject(config));
-                }
-
+                var storageFolder =
+                        ApplicationData.Current.LocalFolder;
+                sampleFile =
+                    await storageFolder.CreateFileAsync(Path,
+                        CreationCollisionOption.ReplaceExisting);
+            }
+            catch (Exception)
+            {
                 return;
             }
 
-            using (var streamReader = new StreamReader(path))
+            var stream = await sampleFile.OpenStreamForWriteAsync();
+            using (var streamWriter = new StreamWriter(stream))
             {
-                config = JsonConvert.DeserializeObject<Config>(streamReader.ReadToEnd());
+                await streamWriter.WriteAsync(JsonConvert.SerializeObject(Config));
             }
         }
+
+        public static async Task LoadConfig()
+        {
+            var text = "";
+            try
+            {
+                var storageFolder =
+                    ApplicationData.Current.LocalFolder;
+                var sampleFile =
+                    await storageFolder.GetFileAsync(Path);
+                text = await FileIO.ReadTextAsync(sampleFile);
+            }
+            catch (Exception)
+            {
+                WriteConfig();
+            }
+
+            if (text != "")
+                Config = JsonConvert.DeserializeObject<Config>(text);
+
+            if (Config == null) Config = new Config();
+        }
     }
+
     public class Config
     {
         public int MillisecondsSleep { get; set; } = 200;
-        public bool AskNick { get; set; } = true;
-        public string Name { get; set; } = "anonymous";
-
+        public RegData RegData { get; set; } = new RegData() { Username = "Anonymous", Password = "password" };
+        public Size Size { get; set; } = new Size(480, 800);
+        public string Token { get; set; }
+    }
+    public class RegData
+    {
+        public string Username { get; set; }
+        public string Password { get; set; }
     }
 }
