@@ -1,4 +1,4 @@
-﻿namespace Server_CS.Controllers
+﻿namespace Server_CS
 {
     public class RegData
     {
