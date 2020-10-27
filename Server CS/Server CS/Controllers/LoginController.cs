@@ -25,6 +25,10 @@ namespace Server_CS.Controllers
             _config = config;
         }
         [AllowAnonymous]
+        [HttpGet]
+        public IActionResult Get(string username) {
+            return Ok(new { response = !(Program.RegDatas.Find(regData => regData.Username == username) == default) });
+        }
         [HttpPost]
         public IActionResult Login([FromBody] RegData login)
         {
