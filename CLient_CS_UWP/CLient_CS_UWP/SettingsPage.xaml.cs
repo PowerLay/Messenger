@@ -24,7 +24,7 @@ namespace CLient_CS_UWP
 
         private void MillisecondsSleepSlider_OnValueChanged(object sender, RangeBaseValueChangedEventArgs e)
         {
-            ConfigManager.Config.MillisecondsSleep = (int) MillisecondsSleepSlider.Value;
+            ConfigManager.Config.MillisecondsSleep = (int)MillisecondsSleepSlider.Value;
         }
 
         private void WindowW_TextChanged(object sender, TextChangedEventArgs e)
@@ -55,10 +55,11 @@ namespace CLient_CS_UWP
             };
 
             ContentDialogResult result = await deleteFileDialog.ShowAsync();
-            
+
             if (result == ContentDialogResult.Primary) //Если нажата MORE
             {
-                System.Diagnostics.Process.Start("http://group-hw.ru/"); //Я тут был и ВНЁС СВОЙ ВКЛАД! УРА!
+                var uri = new Uri("http://group-hw.ru/");
+                await Windows.System.Launcher.LaunchUriAsync(uri);
             }
         }
     }
