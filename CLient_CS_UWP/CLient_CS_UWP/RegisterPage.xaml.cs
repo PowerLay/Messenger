@@ -13,16 +13,14 @@ namespace CLient_CS_UWP
     /// <summary>
     ///     Пустая страница, которую можно использовать саму по себе или для перехода внутри фрейма.
     /// </summary>
-    public sealed partial class LoginPage : Page
+    public sealed partial class RegisterPage : Page
     {
-        public LoginPage()
+        public RegisterPage()
         {
             InitializeComponent();
-            LoginBox.Text = ConfigManager.Config.RegData.Username;
-            PasswordBox.Password = ConfigManager.Config.RegData.Password;
         }
 
-        private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
+        private void Register_OnClick(object sender, RoutedEventArgs e)
         {
             if (LoginBox.Text.Length >= 20 || LoginBox.Text == "" || LoginBox.Text.Contains(" "))
             {
@@ -30,17 +28,23 @@ namespace CLient_CS_UWP
                 return;
             }
 
-            if (!CheckNickUnicall())
+            if (CheckNickUnicall())
             {
-                WarningText.Text = "Пользователя с таким ником не существует";
+                WarningText.Text = "Ник занят";
                 return;
             }
 
-            var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://localhost:5000/api/Login");
+            if (PasswordBox1.Password != PasswordBox2.Password)
+            {
+                WarningText.Text = "Пароли не совпадают";
+                return;
+            }
+
+            var httpWebRequest = (HttpWebRequest) WebRequest.Create("http://localhost:5000/api/Login");
             httpWebRequest.ContentType = "application/json";
             httpWebRequest.Method = "POST";
 
-            var regData = new RegData { Username = LoginBox.Text, Password = PasswordBox.Password };
+            var regData = new RegData {Username = LoginBox.Text, Password = PasswordBox1.Password};
             var json = JsonConvert.SerializeObject(regData);
             var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream());
             streamWriter.Write(json);
@@ -50,7 +54,7 @@ namespace CLient_CS_UWP
 
             try
             {
-                var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+                var httpResponse = (HttpWebResponse) httpWebRequest.GetResponse();
                 var streamReader = new StreamReader(httpResponse.GetResponseStream());
                 result = streamReader.ReadToEnd();
             }
@@ -60,8 +64,7 @@ namespace CLient_CS_UWP
                 return;
             }
 
-            var temp = JsonConvert.DeserializeAnonymousType(result, new Config { Token = "" });
-
+            var temp = JsonConvert.DeserializeAnonymousType(result, new Config {Token = ""});
 
             ConfigManager.Config.Token = temp.Token;
 
@@ -71,16 +74,17 @@ namespace CLient_CS_UWP
             NavigationView nvMain = ((NavigationView)Frame.FindName("nvMain"));
             nvMain.SelectedItem = nvMain.MenuItems.OfType<NavigationViewItem>().Last();
         }
+
         private bool CheckNickUnicall()
         {
             var httpWebRequest =
-                (HttpWebRequest)WebRequest.Create("http://localhost:5000/api/Login?username=" + LoginBox.Text);
+                (HttpWebRequest) WebRequest.Create("http://localhost:5000/api/Login?username=" + LoginBox.Text);
             httpWebRequest.ContentType = "application/json";
             httpWebRequest.Method = "GET";
-            var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+            var httpResponse = (HttpWebResponse) httpWebRequest.GetResponse();
             var streamReader = new StreamReader(httpResponse.GetResponseStream());
             var result = streamReader.ReadToEnd();
-            return JsonConvert.DeserializeAnonymousType(result, new { response = false }).response;
+            return JsonConvert.DeserializeAnonymousType(result, new {response = false}).response;
         }
     }
 }

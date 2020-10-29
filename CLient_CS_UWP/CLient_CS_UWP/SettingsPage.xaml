@@ -47,7 +47,7 @@
                 <StackPanel Margin="0,10,0,0">
                     <Slider Name="MillisecondsSleepSlider" Header="Chat refresh rate" Width="200" Minimum="0"
                             Maximum="1000" StepFrequency="10"
-                            SmallChange="10" LargeChange="100" 
+                            SmallChange="10" LargeChange="100"
                             ValueChanged="MillisecondsSleepSlider_OnValueChanged" />
                 </StackPanel>
                 <TextBlock
@@ -56,10 +56,14 @@
                     FontWeight="Normal"
                     Text="Start window size" />
                 <StackPanel Orientation="Horizontal">
-                    <TextBox Name="WindowW" HorizontalAlignment="Left" Header="Width" TextChanged="WindowW_TextChanged"/>
-                    <TextBox Name="WindowH" HorizontalAlignment="Right" Header="Heigth" TextChanged="WindowH_OnTextChanged"  Margin="5,0,0,0"/>
+                    <TextBox Name="WindowW" HorizontalAlignment="Left" Header="Width" TextChanged="WindowW_TextChanged" />
+                    <TextBox Name="WindowH" HorizontalAlignment="Right" Header="Heigth"
+                             TextChanged="WindowH_OnTextChanged" Margin="5,0,0,0" />
                 </StackPanel>
+                <Button Content="Developers" Click="ButtonDev_click" Margin="0,20,0,0"/>
             </StackPanel>
         </ScrollViewer>
+        <TextBlock FontWeight="Normal" VerticalAlignment="Bottom"
+                    Text="Version 4.0" Opacity="0.5" Margin="5,5,5,5"/>
     </Grid>
 </Page>
