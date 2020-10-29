@@ -78,7 +78,9 @@ namespace CLient_CS_UWP
         {
             var msg = MessageBox.Text;
 
-            var httpWebRequest = (HttpWebRequest) WebRequest.Create($"http://{ConfigManager.Config.IP}:{ConfigManager.Config.Port}/api/Chat");
+            var httpWebRequest =
+                (HttpWebRequest) WebRequest.Create(
+                    $"http://{ConfigManager.Config.IP}:{ConfigManager.Config.Port}/api/Chat");
             httpWebRequest.ContentType = "application/json";
             httpWebRequest.Method = "POST";
             httpWebRequest.Headers.Add("Authorization", "Bearer " + ConfigManager.Config.Token);
