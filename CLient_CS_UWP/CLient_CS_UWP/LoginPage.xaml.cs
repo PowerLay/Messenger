@@ -36,7 +36,7 @@ namespace CLient_CS_UWP
                 return;
             }
 
-            var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://localhost:5000/api/Login");
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create($"http://{ConfigManager.Config.IP}:{ConfigManager.Config.Port}/api/Login");
             httpWebRequest.ContentType = "application/json";
             httpWebRequest.Method = "POST";
 
@@ -74,7 +74,7 @@ namespace CLient_CS_UWP
         private bool CheckNickUnicall()
         {
             var httpWebRequest =
-                (HttpWebRequest)WebRequest.Create("http://localhost:5000/api/Login?username=" + LoginBox.Text);
+                (HttpWebRequest)WebRequest.Create($"http://{ConfigManager.Config.IP}:{ConfigManager.Config.Port}/api/Login?username={LoginBox.Text}");
             httpWebRequest.ContentType = "application/json";
             httpWebRequest.Method = "GET";
             var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();

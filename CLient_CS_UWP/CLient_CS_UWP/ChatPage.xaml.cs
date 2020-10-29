@@ -48,7 +48,7 @@ namespace CLient_CS_UWP
             string res;
             try
             {
-                res = await GetAsync("http://localhost:5000/api/Chat");
+                res = await GetAsync($"http://{ConfigManager.Config.IP}:{ConfigManager.Config.Port}/api/Chat");
             }
             catch (Exception)
             {
@@ -78,7 +78,7 @@ namespace CLient_CS_UWP
         {
             var msg = MessageBox.Text;
 
-            var httpWebRequest = (HttpWebRequest) WebRequest.Create("http://localhost:5000/api/Chat");
+            var httpWebRequest = (HttpWebRequest) WebRequest.Create($"http://{ConfigManager.Config.IP}:{ConfigManager.Config.Port}/api/Chat");
             httpWebRequest.ContentType = "application/json";
             httpWebRequest.Method = "POST";
             httpWebRequest.Headers.Add("Authorization", "Bearer " + ConfigManager.Config.Token);

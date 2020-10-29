@@ -20,6 +20,8 @@ namespace CLient_CS_UWP
             MillisecondsSleepSlider.Value = ConfigManager.Config.MillisecondsSleep;
             WindowW.Text = ConfigManager.Config.Size.Width.ToString();
             WindowH.Text = ConfigManager.Config.Size.Height.ToString();
+            IPBox.Text = ConfigManager.Config.IP;
+            PortBox.Text = ConfigManager.Config.Port.ToString();
         }
 
         private void MillisecondsSleepSlider_OnValueChanged(object sender, RangeBaseValueChangedEventArgs e)
@@ -61,6 +63,17 @@ namespace CLient_CS_UWP
                 var uri = new Uri("http://group-hw.ru/");
                 await Windows.System.Launcher.LaunchUriAsync(uri);
             }
+        }
+
+        private void IPBox_OnTextChanging(TextBox sender, TextBoxTextChangingEventArgs args)
+        {
+            ConfigManager.Config.IP = IPBox.Text;
+        }
+
+        private void PortBox_OnTextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (int.TryParse(IPBox.Text, out var Port))
+                ConfigManager.Config.Port = Port;
         }
     }
 }
