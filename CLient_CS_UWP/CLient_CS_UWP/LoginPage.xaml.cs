@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Net;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -59,7 +60,7 @@ namespace CLient_CS_UWP
                 return;
             }
 
-            var temp = JsonConvert.DeserializeAnonymousType(result,new Config{ Token =""});
+            var temp = JsonConvert.DeserializeAnonymousType(result, new Config { Token = "" });
 
 
             ConfigManager.Config.Token = temp.Token;
@@ -67,7 +68,8 @@ namespace CLient_CS_UWP
             ConfigManager.Config.RegData = regData;
             WarningText.Text = "Success!";
             ConfigManager.WriteConfig();
-            ContentFrame.Navigate(typeof(ChatPage));
+            NavigationView nvMain = ((NavigationView)Frame.FindName("nvMain"));
+            nvMain.SelectedItem = nvMain.MenuItems.OfType<NavigationViewItem>().Last();
         }
         private bool CheckNickUnicall()
         {

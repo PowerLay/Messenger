@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Net;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -70,6 +71,8 @@ namespace CLient_CS_UWP
             ConfigManager.Config.RegData = regData;
             WarningText.Text = "Success!";
             ConfigManager.WriteConfig();
+            NavigationView nvMain = ((NavigationView)Frame.FindName("nvMain"));
+            nvMain.SelectedItem = nvMain.MenuItems.OfType<NavigationViewItem>().Last();
         }
 
         private bool CheckNickUnicall()
