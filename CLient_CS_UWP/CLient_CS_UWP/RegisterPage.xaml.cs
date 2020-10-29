@@ -24,19 +24,19 @@ namespace CLient_CS_UWP
         {
             if (LoginBox.Text.Length >= 20 || LoginBox.Text == "" || LoginBox.Text.Contains(" "))
             {
-                WarningText.Text = "Неверный формат ника";
+                WarningText.Text = "Invalid nickname format";
                 return;
             }
 
             if (CheckNickUnicall())
             {
-                WarningText.Text = "Ник занят";
+                WarningText.Text = "Nickname is busy";
                 return;
             }
 
             if (PasswordBox1.Password != PasswordBox2.Password)
             {
-                WarningText.Text = "Пароли не совпадают";
+                WarningText.Text = "Passwords do not match";
                 return;
             }
 

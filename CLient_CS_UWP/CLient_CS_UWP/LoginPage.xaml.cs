@@ -26,13 +26,13 @@ namespace CLient_CS_UWP
         {
             if (LoginBox.Text.Length >= 20 || LoginBox.Text == "" || LoginBox.Text.Contains(" "))
             {
-                WarningText.Text = "Неверный формат ника";
+                WarningText.Text = "Invalid nickname format";
                 return;
             }
 
             if (!CheckNickUnicall())
             {
-                WarningText.Text = "Пользователя с таким ником не существует";
+                WarningText.Text = "User with this nickname does not exist";
                 return;
             }
 

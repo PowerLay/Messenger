@@ -50,15 +50,15 @@ namespace CLient_CS_UWP
         {
             ContentDialog deleteFileDialog = new ContentDialog()
             {
-                Title = "DEVELOPERS",
-                Content = "GROUP HW",
-                PrimaryButtonText = "More",
+                Title = "GROUP HW",
+                Content = "Open the official website?",
+                PrimaryButtonText = "Open",
                 SecondaryButtonText = "Close"
             };
 
             ContentDialogResult result = await deleteFileDialog.ShowAsync();
 
-            if (result == ContentDialogResult.Primary) //Если нажата MORE
+            if (result == ContentDialogResult.Primary) //Если нажата OPEN
             {
                 var uri = new Uri("http://group-hw.ru/");
                 await Windows.System.Launcher.LaunchUriAsync(uri);

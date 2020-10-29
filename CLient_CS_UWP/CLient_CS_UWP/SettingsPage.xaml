@@ -75,6 +75,6 @@
             </StackPanel>
         </ScrollViewer>
         <TextBlock FontWeight="Normal" VerticalAlignment="Bottom"
-                    Text="Version 4.0" Opacity="0.5" Margin="5,5,5,5"/>
+                    Text="Version 4.1" Opacity="0.5" Margin="5,5,5,5"/>
     </Grid>
 </Page>
