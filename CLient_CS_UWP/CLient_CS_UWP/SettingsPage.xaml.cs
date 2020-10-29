@@ -1,4 +1,5 @@
-﻿using Windows.Foundation;
+﻿using System;
+using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -41,6 +42,24 @@ namespace CLient_CS_UWP
         private void Page_LosingFocus(UIElement sender, LosingFocusEventArgs args)
         {
             ConfigManager.WriteConfig();
+        }
+
+        private async void ButtonDev_click(object sender, RoutedEventArgs e)
+        {
+            ContentDialog deleteFileDialog = new ContentDialog()
+            {
+                Title = "DEVELOPERS",
+                Content = "GROUP HW",
+                PrimaryButtonText = "More",
+                SecondaryButtonText = "Close"
+            };
+
+            ContentDialogResult result = await deleteFileDialog.ShowAsync();
+            
+            if (result == ContentDialogResult.Primary) //Если нажата MORE
+            {
+                System.Diagnostics.Process.Start("http://group-hw.ru/"); //Я тут был и ВНЁС СВОЙ ВКЛАД! УРА!
+            }
         }
     }
 }
