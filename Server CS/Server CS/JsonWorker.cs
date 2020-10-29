@@ -11,6 +11,7 @@ namespace Server_CS
         ///     Файл для сохранения сообщений в виде json массива
         /// </summary>
         private static readonly string MessagesPath = @"messages.json";
+
         private static readonly string RegDataPath = @"regData.json";
 
         /// <summary>
@@ -46,9 +47,10 @@ namespace Server_CS
                 using var streamReader = new StreamReader(MessagesPath);
                 Program.Messages = JsonConvert.DeserializeObject<List<Message>>(streamReader.ReadToEnd());
             }
-            catch (System.Exception)
+            catch (Exception)
             {
             }
+
             if (!File.Exists(RegDataPath))
                 return;
             try

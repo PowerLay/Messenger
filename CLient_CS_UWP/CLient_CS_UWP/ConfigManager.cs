@@ -67,7 +67,6 @@ namespace CLient_CS_UWP
         public string Token { get; set; }
         public string IP { get; set; } = "localhost";
         public int Port { get; set; } = 5000;
-
     }
 
     public class RegData
