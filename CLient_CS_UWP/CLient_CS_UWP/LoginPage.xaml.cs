@@ -23,11 +23,18 @@ namespace CLient_CS_UWP
 
         private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
         {
-            var httpWebRequest = (HttpWebRequest) WebRequest.Create("http://localhost:5000/api/Login");
+
+            if (LoginBox.Text.Length >= 20 || LoginBox.Text == "" || LoginBox.Text.Contains(" "))
+            {
+                WarningText.Text = "Неверный формат ника";
+                return;
+            }
+
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://localhost:5000/api/Login");
             httpWebRequest.ContentType = "application/json";
             httpWebRequest.Method = "POST";
 
-            var regData = new RegData {Username = LoginBox.Text, Password = PasswordBox.Password};
+            var regData = new RegData { Username = LoginBox.Text, Password = PasswordBox.Password };
             var json = JsonConvert.SerializeObject(regData);
             var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream());
             streamWriter.Write(json);
@@ -37,7 +44,7 @@ namespace CLient_CS_UWP
 
             try
             {
-                var httpResponse = (HttpWebResponse) httpWebRequest.GetResponse();
+                var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
                 var streamReader = new StreamReader(httpResponse.GetResponseStream());
                 result = streamReader.ReadToEnd();
             }
