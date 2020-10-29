@@ -29,6 +29,12 @@ namespace CLient_CS_UWP
                 return;
             }
 
+            if (!CheckNickUnicall())
+            {
+                WarningText.Text = "Пользователя с таким ником не существует";
+                return;
+            }
+
             var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://localhost:5000/api/Login");
             httpWebRequest.ContentType = "application/json";
             httpWebRequest.Method = "POST";
@@ -62,6 +68,17 @@ namespace CLient_CS_UWP
             WarningText.Text = "Success!";
             ConfigManager.WriteConfig();
             ContentFrame.Navigate(typeof(ChatPage));
+        }
+        private bool CheckNickUnicall()
+        {
+            var httpWebRequest =
+                (HttpWebRequest)WebRequest.Create("http://localhost:5000/api/Login?username=" + LoginBox.Text);
+            httpWebRequest.ContentType = "application/json";
+            httpWebRequest.Method = "GET";
+            var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+            var streamReader = new StreamReader(httpResponse.GetResponseStream());
+            var result = streamReader.ReadToEnd();
+            return JsonConvert.DeserializeAnonymousType(result, new { response = false }).response;
         }
     }
 }
