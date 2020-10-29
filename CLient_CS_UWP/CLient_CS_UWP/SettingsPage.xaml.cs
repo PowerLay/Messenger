@@ -1,5 +1,6 @@
 ﻿using System;
 using Windows.Foundation;
+using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -26,7 +27,7 @@ namespace CLient_CS_UWP
 
         private void MillisecondsSleepSlider_OnValueChanged(object sender, RangeBaseValueChangedEventArgs e)
         {
-            ConfigManager.Config.MillisecondsSleep = (int)MillisecondsSleepSlider.Value;
+            ConfigManager.Config.MillisecondsSleep = (int) MillisecondsSleepSlider.Value;
         }
 
         private void WindowW_TextChanged(object sender, TextChangedEventArgs e)
@@ -48,7 +49,7 @@ namespace CLient_CS_UWP
 
         private async void ButtonDev_click(object sender, RoutedEventArgs e)
         {
-            ContentDialog deleteFileDialog = new ContentDialog()
+            var deleteFileDialog = new ContentDialog
             {
                 Title = "DEVELOPERS",
                 Content = "GROUP HW",
@@ -56,12 +57,12 @@ namespace CLient_CS_UWP
                 SecondaryButtonText = "Close"
             };
 
-            ContentDialogResult result = await deleteFileDialog.ShowAsync();
+            var result = await deleteFileDialog.ShowAsync();
 
             if (result == ContentDialogResult.Primary) //Если нажата MORE
             {
                 var uri = new Uri("http://group-hw.ru/");
-                await Windows.System.Launcher.LaunchUriAsync(uri);
+                await Launcher.LaunchUriAsync(uri);
             }
         }
 
