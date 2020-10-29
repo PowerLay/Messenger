@@ -44,5 +44,7 @@
                 <TextBlock Text="" HorizontalAlignment="Center" Name="WarningText" />
             </StackPanel>
         </ScrollViewer>
+
+        <Frame x:Name="ContentFrame" />
     </Grid>
 </Page>

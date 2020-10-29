@@ -38,6 +38,7 @@ namespace CLient_CS_UWP
                 if (selectedItem == null) return;
                 if (((string) selectedItem.Tag).Equals("ChatPage")) ContentFrame.Navigate(typeof(ChatPage));
                 if (((string) selectedItem.Tag).Equals("LoginPage")) ContentFrame.Navigate(typeof(LoginPage));
+                if (((string) selectedItem.Tag).Equals("RegisterPage")) ContentFrame.Navigate(typeof(RegisterPage));
             }
         }
     }

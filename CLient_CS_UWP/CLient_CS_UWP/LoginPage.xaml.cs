@@ -61,6 +61,7 @@ namespace CLient_CS_UWP
             ConfigManager.Config.RegData = regData;
             WarningText.Text = "Success!";
             ConfigManager.WriteConfig();
+            ContentFrame.Navigate(typeof(ChatPage));
         }
     }
 }
