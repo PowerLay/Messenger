@@ -45,7 +45,7 @@ namespace Server_CS
             try
             {
                 using var streamReader = new StreamReader(MessagesPath);
-                Program.Messages = JsonConvert.DeserializeObject<List<Message>>(streamReader.ReadToEnd());
+                Program.Messages = JsonConvert.DeserializeObject<List<Message>>(await streamReader.ReadToEndAsync());
             }
             catch (Exception)
             {
@@ -56,7 +56,7 @@ namespace Server_CS
             try
             {
                 using var streamReader = new StreamReader(RegDataPath);
-                Program.RegDatas = JsonConvert.DeserializeObject<List<RegData>>(streamReader.ReadToEnd());
+                Program.RegDatas = JsonConvert.DeserializeObject<List<RegData>>(await streamReader.ReadToEndAsync());
             }
             catch (Exception)
             {
