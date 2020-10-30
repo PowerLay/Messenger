@@ -54,9 +54,11 @@ namespace CLient_CS_UWP
         public async void UpdateHistory()
         {
             string res;
+            string onlineStatus;
             try
             {
                 res = await GetAsync($"http://{ConfigManager.Config.IP}:{ConfigManager.Config.Port}/api/Chat");
+                onlineStatus = await GetAsync($"http://{ConfigManager.Config.IP}:{ConfigManager.Config.Port}/api/Online");
             }
             catch (Exception)
             {
@@ -64,22 +66,46 @@ namespace CLient_CS_UWP
             }
 
             if (res == "[]" && res == prevRes) return;
+            if (onlineStatus == "[]") return;
             if (MessagesListView.Items == null) return;
 
             var messages = JsonConvert.DeserializeObject<List<Message>>(res);
+            var onlineUsers = JsonConvert.DeserializeObject <Dictionary<string, bool>>(onlineStatus);
             if (MessagesListView.Items?.Count == 0)
             {
                 foreach (var message in messages)
-                    MessagesListView.Items.Add(message.ToString());
+                {
+                    MessagesListView.Items.Add(GetTrueMessage(message));
+                }
                 prevRes = res;
                 return;
             }
 
             if (MessagesListView.Items.Count != messages.Count)
                 for (var i = MessagesListView.Items.Count; i < messages.Count; i++)
-                    MessagesListView.Items?.Add(messages[i].ToString());
+                    MessagesListView.Items?.Add(GetTrueMessage(messages[i]));
 
             prevRes = res;
+        }
+
+        private static Message GetTrueMessage(Message message)
+        {
+            Message tempMsg;
+
+            if (message.Name == ConfigManager.Config.RegData.Username)
+            {
+                tempMsg = new Message(HorizontalAlignment.Right) {Name = message.Name, Ts = message.Ts, Text = message.Text};
+            }
+            else if (string.IsNullOrEmpty(message.Name))
+            {
+                tempMsg = new Message(HorizontalAlignment.Center) {Name = message.Name, Ts = message.Ts, Text = message.Text};
+            }
+            else
+            {
+                tempMsg = new Message(HorizontalAlignment.Left) {Name = message.Name, Ts = message.Ts, Text = message.Text};
+            }
+
+            return tempMsg;
         }
 
         private void Post()
