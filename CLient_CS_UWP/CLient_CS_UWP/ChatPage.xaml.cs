@@ -35,12 +35,17 @@ namespace CLient_CS_UWP
             var onlineUpdaterThread = new Thread(sr.OnlineUpdater);
             onlineUpdaterThread.Start();
 
+
             if (string.IsNullOrEmpty(ConfigManager.Config.Token))
             {
                 MessageBox.IsEnabled = false;
                 SendButton.IsEnabled = false;
                 EmojiButton.IsEnabled = false;
                 AskLogin();
+            }
+            else
+            {
+                MessageBox.Focus(FocusState.Programmatic);
             }
         }
 

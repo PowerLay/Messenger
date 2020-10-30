@@ -20,6 +20,7 @@ namespace CLient_CS_UWP
         public RegisterPage()
         {
             InitializeComponent();
+            LoginBox.Focus(FocusState.Programmatic);
         }
 
         private void Register_OnClick(object sender, RoutedEventArgs e)
