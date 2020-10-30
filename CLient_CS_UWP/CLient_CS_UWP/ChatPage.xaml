@@ -16,10 +16,10 @@
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
                 <PersonPicture VerticalAlignment="Top"
-                                  HorizontalAlignment="Center"
-                                  Width="32"
-                                  DisplayName="{Binding Name}"
-                                  Visibility="{x:Bind Visibility}" />
+                               HorizontalAlignment="Center"
+                               Width="32"
+                               DisplayName="{Binding Name}"
+                               Visibility="{x:Bind Visibility}" />
                 <Grid Grid.Column="1" Margin="4" MaxWidth="700" MinWidth="50"
                       Padding="10, 0, 0, 10" Background="{x:Bind BgColor}" CornerRadius="4">
                     <Grid.RowDefinitions>
@@ -38,7 +38,7 @@
 
                         <TextBlock HorizontalAlignment="{x:Bind MsgAlignment}" Text="{x:Bind Text}"
                                    Padding="5, 5, 5, 2" FontSize="20" TextWrapping="Wrap"
-                                  Foreground="{ThemeResource SystemControlForegroundAltMediumHighBrush}" />
+                                   Foreground="{ThemeResource SystemControlForegroundAltMediumHighBrush}" />
                         <TextBlock Grid.Column="1" Text="{x:Bind HourMinute()}" HorizontalAlignment="Right"
                                    Padding="10, 0, 5, 2" FontSize="15" Opacity="0.75" VerticalAlignment="Bottom"
                                    Foreground="{ThemeResource SystemControlForegroundAltHighBrush}" />

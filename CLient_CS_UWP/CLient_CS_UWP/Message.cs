@@ -19,9 +19,9 @@ namespace CLient_CS_UWP
 
         public DateTime DateTime;
         public HorizontalAlignment MsgAlignment;
+        public SolidColorBrush OnlineBrush;
         public string TopHeight;
         public Visibility Visibility;
-        public SolidColorBrush OnlineBrush;
 
         public Message()
         {
@@ -31,13 +31,9 @@ namespace CLient_CS_UWP
         {
             MsgAlignment = align;
             if (online)
-            {
                 OnlineBrush = new SolidColorBrush(Colors.DarkGreen);
-            }
             else
-            {
                 OnlineBrush = new SolidColorBrush(Colors.Black);
-            }
 
             // If received message, use accent background
             if (MsgAlignment == HorizontalAlignment.Left)

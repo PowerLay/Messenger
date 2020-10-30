@@ -36,19 +36,18 @@ namespace CLient_CS_UWP
             try
             {
                 var httpWebRequest =
-                     (HttpWebRequest)WebRequest.Create(
-                         $"http://{ConfigManager.Config.IP}:{ConfigManager.Config.Port}/api/Online");
+                    (HttpWebRequest) WebRequest.Create(
+                        $"http://{ConfigManager.Config.IP}:{ConfigManager.Config.Port}/api/Online");
                 httpWebRequest.ContentType = "application/json";
                 httpWebRequest.Method = "POST";
                 httpWebRequest.Headers.Add("Authorization", "Bearer " + ConfigManager.Config.Token);
-                var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+                var httpResponse = (HttpWebResponse) httpWebRequest.GetResponse();
                 var streamReader = new StreamReader(httpResponse.GetResponseStream());
                 var result = await streamReader.ReadToEndAsync();
                 if (result != "ok") throw new Exception("Something went wrong");
             }
             catch (Exception)
             {
-
             }
         }
 
