@@ -38,9 +38,9 @@
                     Style="{StaticResource TitleTextBlockStyle}"
                     Margin="0,4,0,0"
                     Text="Register" MinWidth="200" />
-                <TextBox Name="LoginBox" PlaceholderText="Nickname" />
-                <PasswordBox Name="PasswordBox1" PlaceholderText="Password" />
-                <PasswordBox Name="PasswordBox2" PlaceholderText="Repeat password" />
+                <TextBox Name="LoginBox" PlaceholderText="Nickname" KeyDown="Box_OnKeyDown"/>
+                <PasswordBox Name="PasswordBox1" PlaceholderText="Password" KeyDown="Box_OnKeyDown"/>
+                <PasswordBox Name="PasswordBox2" PlaceholderText="Repeat password" KeyDown="Box_OnKeyDown"/>
                 <Button Content="Register" HorizontalAlignment="Center" Click="Register_OnClick" Margin="5" />
                 <TextBlock Text="" HorizontalAlignment="Center" Name="WarningText" />
             </StackPanel>

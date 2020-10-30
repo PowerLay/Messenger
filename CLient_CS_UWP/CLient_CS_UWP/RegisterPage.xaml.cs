@@ -2,8 +2,10 @@
 using System.IO;
 using System.Linq;
 using System.Net;
+using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Input;
 using Newtonsoft.Json;
 
 // Документацию по шаблону элемента "Пустая страница" см. по адресу https://go.microsoft.com/fwlink/?LinkId=234238
@@ -88,6 +90,12 @@ namespace CLient_CS_UWP
             var streamReader = new StreamReader(httpResponse.GetResponseStream());
             var result = streamReader.ReadToEnd();
             return JsonConvert.DeserializeAnonymousType(result, new {response = false}).response;
+        }
+
+        private void Box_OnKeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            if (e.Key == VirtualKey.Enter)
+                Register_OnClick(sender, e);
         }
     }
 }
