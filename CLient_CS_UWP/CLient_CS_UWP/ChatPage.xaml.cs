@@ -22,6 +22,8 @@ namespace CLient_CS_UWP
     {
         private static string prevRes = "";
 
+        private Dictionary<string, bool> OnlineUsers = new Dictionary<string, bool>();
+
         public ChatPage()
         {
             InitializeComponent();
@@ -29,13 +31,10 @@ namespace CLient_CS_UWP
             var updaterThread = new Thread(sr.ChatUpdater);
             updaterThread.Start();
 
-            Thread onlineUpdaterThread = new Thread(sr.OnlineUpdater);
+            var onlineUpdaterThread = new Thread(sr.OnlineUpdater);
             onlineUpdaterThread.Start();
 
-            if (string.IsNullOrEmpty(ConfigManager.Config.Token)) 
-            {
-                MessageBox.IsEnabled = false;
-            }
+            if (string.IsNullOrEmpty(ConfigManager.Config.Token)) MessageBox.IsEnabled = false;
         }
 
         public async Task<string> GetAsync(string uri)
@@ -58,7 +57,8 @@ namespace CLient_CS_UWP
             try
             {
                 res = await GetAsync($"http://{ConfigManager.Config.IP}:{ConfigManager.Config.Port}/api/Chat");
-                onlineStatus = await GetAsync($"http://{ConfigManager.Config.IP}:{ConfigManager.Config.Port}/api/Online");
+                onlineStatus =
+                    await GetAsync($"http://{ConfigManager.Config.IP}:{ConfigManager.Config.Port}/api/Online");
             }
             catch (Exception)
             {
@@ -70,17 +70,20 @@ namespace CLient_CS_UWP
             if (MessagesListView.Items == null) return;
 
             var messages = JsonConvert.DeserializeObject<List<Message>>(res);
-            var onlineUsers = JsonConvert.DeserializeObject <Dictionary<string, bool>>(onlineStatus);
+            var onlineUsers = JsonConvert.DeserializeObject<Dictionary<string, bool>>(onlineStatus);
             if (MessagesListView.Items?.Count == 0)
             {
                 foreach (var message in messages)
                 {
                     bool online;
                     if (string.IsNullOrEmpty(message.Name)) online = false;
-                    online = onlineUsers.ContainsKey(message.Name) && onlineUsers[message.Name];
+                    else if (!onlineUsers.ContainsKey(message.Name)) online = false;
+                    else online = onlineUsers[message.Name];
 
                     MessagesListView.Items.Add(GetTrueMessage(message, online));
                 }
+
+                OnlineUsers = onlineUsers;
                 prevRes = res;
                 return;
             }
@@ -90,29 +93,48 @@ namespace CLient_CS_UWP
                 {
                     bool online;
                     if (string.IsNullOrEmpty(messages[i].Name)) online = false;
-                    online = onlineUsers.ContainsKey(messages[i].Name) && onlineUsers[messages[i].Name];
+                    else if (!onlineUsers.ContainsKey(messages[i].Name)) online = false;
+                    else online = onlineUsers[messages[i].Name];
+
                     MessagesListView.Items?.Add(GetTrueMessage(messages[i], online));
                 }
 
             prevRes = res;
+
+            var eq = true;
+
+            foreach (var (key, value) in onlineUsers)
+                if (value != OnlineUsers[key])
+                    eq = false;
+
+            if (!eq)
+                for (var i = 0; i < messages.Count; i++)
+                {
+                    var message = messages[i];
+                    bool online;
+                    if (string.IsNullOrEmpty(message.Name)) online = false;
+                    else if (!onlineUsers.ContainsKey(message.Name)) online = false;
+                    else online = onlineUsers[message.Name];
+
+                    MessagesListView.Items[i] = GetTrueMessage(message, online);
+                }
+
+            OnlineUsers = onlineUsers;
         }
 
-        private static Message GetTrueMessage(Message message,bool online)
+        private static Message GetTrueMessage(Message message, bool online)
         {
             Message tempMsg;
 
             if (message.Name == ConfigManager.Config.RegData.Username)
-            {
-                tempMsg = new Message(HorizontalAlignment.Right, online) {Name = message.Name, Ts = message.Ts, Text = message.Text};
-            }
+                tempMsg = new Message(HorizontalAlignment.Right, online)
+                    {Name = message.Name, Ts = message.Ts, Text = message.Text};
             else if (string.IsNullOrEmpty(message.Name))
-            {
-                tempMsg = new Message(HorizontalAlignment.Center, online) {Name = message.Name, Ts = message.Ts, Text = message.Text};
-            }
+                tempMsg = new Message(HorizontalAlignment.Center, online)
+                    {Name = message.Name, Ts = message.Ts, Text = message.Text};
             else
-            {
-                tempMsg = new Message(HorizontalAlignment.Left, online) {Name = message.Name, Ts = message.Ts, Text = message.Text};
-            }
+                tempMsg = new Message(HorizontalAlignment.Left, online)
+                    {Name = message.Name, Ts = message.Ts, Text = message.Text};
 
             return tempMsg;
         }
@@ -120,10 +142,7 @@ namespace CLient_CS_UWP
         private void Post()
         {
             var msg = MessageBox.Text;
-            if (msg =="")
-            {
-                return;
-            }
+            if (msg == "") return;
             var httpWebRequest =
                 (HttpWebRequest) WebRequest.Create(
                     $"http://{ConfigManager.Config.IP}:{ConfigManager.Config.Port}/api/Chat");
