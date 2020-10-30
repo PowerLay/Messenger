@@ -65,6 +65,8 @@ namespace CLient_CS_UWP
         public RegData RegData { get; set; } = new RegData {Username = "Anonymous", Password = "password"};
         public Size Size { get; set; } = new Size(480, 800);
         public string Token { get; set; }
+        public string IP { get; set; } = "localhost";
+        public int Port { get; set; } = 5000;
     }
 
     public class RegData

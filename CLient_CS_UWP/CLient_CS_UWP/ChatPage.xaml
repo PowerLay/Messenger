@@ -4,8 +4,49 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:local="using:CLient_CS_UWP"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Page.Resources>
+        <DataTemplate x:Key="MessageView" x:DataType="local:Message">
+            <Grid Margin="4" HorizontalAlignment="{x:Bind MsgAlignment}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <PersonPicture VerticalAlignment="Top"
+                                  HorizontalAlignment="Center"
+                                  Width="32"
+                                  DisplayName="{Binding Name}"
+                                  Visibility="{x:Bind Visibility}" />
+                <Grid Grid.Column="1" Margin="4" MaxWidth="700" MinWidth="50"
+                      Padding="10, 0, 0, 10" Background="{x:Bind BgColor}" CornerRadius="4">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="{x:Bind TopHeight}" />
+                        <RowDefinition Height="100*" />
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0" Text="{x:Bind Name}" HorizontalAlignment="{x:Bind MsgAlignment}"
+                               Margin="0, 5, 5, 0" FontSize="15"
+                               FontWeight="Bold" Foreground="{x:Bind OnlineBrush}" />
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock HorizontalAlignment="{x:Bind MsgAlignment}" Text="{x:Bind Text}"
+                                   Padding="5, 5, 5, 2" FontSize="20" TextWrapping="Wrap"
+                                  Foreground="{ThemeResource SystemControlForegroundAltMediumHighBrush}" />
+                        <TextBlock Grid.Column="1" Text="{x:Bind HourMinute()}" HorizontalAlignment="Right"
+                                   Padding="10, 0, 5, 2" FontSize="15" Opacity="0.75" VerticalAlignment="Bottom"
+                                   Foreground="{ThemeResource SystemControlForegroundAltHighBrush}" />
+                    </Grid>
+                </Grid>
+            </Grid>
+        </DataTemplate>
+    </Page.Resources>
 
     <Grid>
         <Grid.ColumnDefinitions>
@@ -26,12 +67,20 @@
                     VerticalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
                     MinWidth="70" MinHeight="6" Click="SendButton_Click" />
         </StackPanel>
-        <ListView Name="MessagesListView" Grid.Row="0" Grid.ColumnSpan="2">
+
+        <ListView Name="MessagesListView" Grid.Row="0" Grid.ColumnSpan="2" ItemTemplate="{StaticResource MessageView}">
             <ListView.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <ItemsStackPanel ItemsUpdatingScrollMode="KeepLastItemInView" />
+                    <ItemsStackPanel ItemsUpdatingScrollMode="KeepLastItemInView"
+                                     VerticalAlignment="Bottom" />
                 </ItemsPanelTemplate>
             </ListView.ItemsPanel>
+
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                </Style>
+            </ListView.ItemContainerStyle>
         </ListView>
     </Grid>
 </Page>

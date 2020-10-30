@@ -37,10 +37,10 @@
                 <TextBlock
                     Style="{StaticResource TitleTextBlockStyle}"
                     Margin="0,4,0,0"
-                    Text="Login" MinWidth="200"/>
+                    Text="Login" MinWidth="200" />
                 <TextBox Name="LoginBox" PlaceholderText="Nickname" />
                 <PasswordBox Name="PasswordBox" PlaceholderText="Password" />
-                <Button Content="Login" HorizontalAlignment="Center" Click="ButtonBase_OnClick" />
+                <Button Content="Login" HorizontalAlignment="Center" Click="ButtonBase_OnClick" Margin="5" />
                 <TextBlock Text="" HorizontalAlignment="Center" Name="WarningText" />
             </StackPanel>
         </ScrollViewer>

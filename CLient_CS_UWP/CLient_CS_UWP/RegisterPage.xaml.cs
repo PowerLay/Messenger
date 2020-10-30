@@ -24,23 +24,25 @@ namespace CLient_CS_UWP
         {
             if (LoginBox.Text.Length >= 20 || LoginBox.Text == "" || LoginBox.Text.Contains(" "))
             {
-                WarningText.Text = "Неверный формат ника";
+                WarningText.Text = "Invalid nickname format";
                 return;
             }
 
             if (CheckNickUnicall())
             {
-                WarningText.Text = "Ник занят";
+                WarningText.Text = "Nickname is busy";
                 return;
             }
 
             if (PasswordBox1.Password != PasswordBox2.Password)
             {
-                WarningText.Text = "Пароли не совпадают";
+                WarningText.Text = "Passwords do not match";
                 return;
             }
 
-            var httpWebRequest = (HttpWebRequest) WebRequest.Create("http://localhost:5000/api/Login");
+            var httpWebRequest =
+                (HttpWebRequest) WebRequest.Create(
+                    $"http://{ConfigManager.Config.IP}:{ConfigManager.Config.Port}/api/Login");
             httpWebRequest.ContentType = "application/json";
             httpWebRequest.Method = "POST";
 
@@ -71,14 +73,15 @@ namespace CLient_CS_UWP
             ConfigManager.Config.RegData = regData;
             WarningText.Text = "Success!";
             ConfigManager.WriteConfig();
-            NavigationView nvMain = ((NavigationView)Frame.FindName("nvMain"));
+            var nvMain = (NavigationView) Frame.FindName("nvMain");
             nvMain.SelectedItem = nvMain.MenuItems.OfType<NavigationViewItem>().Last();
         }
 
         private bool CheckNickUnicall()
         {
             var httpWebRequest =
-                (HttpWebRequest) WebRequest.Create("http://localhost:5000/api/Login?username=" + LoginBox.Text);
+                (HttpWebRequest) WebRequest.Create(
+                    $"http://{ConfigManager.Config.IP}:{ConfigManager.Config.Port}/api/Login?username={LoginBox.Text}");
             httpWebRequest.ContentType = "application/json";
             httpWebRequest.Method = "GET";
             var httpResponse = (HttpWebResponse) httpWebRequest.GetResponse();

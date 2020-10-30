@@ -22,12 +22,19 @@ namespace CLient_CS_UWP
     {
         private static string prevRes = "";
 
+        private Dictionary<string, bool> OnlineUsers = new Dictionary<string, bool>();
+
         public ChatPage()
         {
             InitializeComponent();
             var sr = new ServerResponse(this);
-            var updaterThread = new Thread(sr.Start);
+            var updaterThread = new Thread(sr.ChatUpdater);
             updaterThread.Start();
+
+            var onlineUpdaterThread = new Thread(sr.OnlineUpdater);
+            onlineUpdaterThread.Start();
+
+            if (string.IsNullOrEmpty(ConfigManager.Config.Token)) MessageBox.IsEnabled = false;
         }
 
         public async Task<string> GetAsync(string uri)
@@ -46,9 +53,12 @@ namespace CLient_CS_UWP
         public async void UpdateHistory()
         {
             string res;
+            string onlineStatus;
             try
             {
-                res = await GetAsync("http://localhost:5000/api/Chat");
+                res = await GetAsync($"http://{ConfigManager.Config.IP}:{ConfigManager.Config.Port}/api/Chat");
+                onlineStatus =
+                    await GetAsync($"http://{ConfigManager.Config.IP}:{ConfigManager.Config.Port}/api/Online");
             }
             catch (Exception)
             {
@@ -56,29 +66,86 @@ namespace CLient_CS_UWP
             }
 
             if (res == "[]" && res == prevRes) return;
+            if (onlineStatus == "[]") return;
             if (MessagesListView.Items == null) return;
 
             var messages = JsonConvert.DeserializeObject<List<Message>>(res);
+            var onlineUsers = JsonConvert.DeserializeObject<Dictionary<string, bool>>(onlineStatus);
             if (MessagesListView.Items?.Count == 0)
             {
                 foreach (var message in messages)
-                    MessagesListView.Items.Add(message.ToString());
+                {
+                    bool online;
+                    if (string.IsNullOrEmpty(message.Name)) online = false;
+                    else if (!onlineUsers.ContainsKey(message.Name)) online = false;
+                    else online = onlineUsers[message.Name];
+
+                    MessagesListView.Items.Add(GetTrueMessage(message, online));
+                }
+
+                OnlineUsers = onlineUsers;
                 prevRes = res;
                 return;
             }
 
             if (MessagesListView.Items.Count != messages.Count)
                 for (var i = MessagesListView.Items.Count; i < messages.Count; i++)
-                    MessagesListView.Items?.Add(messages[i].ToString());
+                {
+                    bool online;
+                    if (string.IsNullOrEmpty(messages[i].Name)) online = false;
+                    else if (!onlineUsers.ContainsKey(messages[i].Name)) online = false;
+                    else online = onlineUsers[messages[i].Name];
+
+                    MessagesListView.Items?.Add(GetTrueMessage(messages[i], online));
+                }
 
             prevRes = res;
+
+            var eq = true;
+
+            foreach (var (key, value) in onlineUsers)
+                if (value != OnlineUsers[key])
+                    eq = false;
+
+            if (!eq)
+                for (var i = 0; i < messages.Count; i++)
+                {
+                    var message = messages[i];
+                    bool online;
+                    if (string.IsNullOrEmpty(message.Name)) online = false;
+                    else if (!onlineUsers.ContainsKey(message.Name)) online = false;
+                    else online = onlineUsers[message.Name];
+
+                    MessagesListView.Items[i] = GetTrueMessage(message, online);
+                }
+
+            OnlineUsers = onlineUsers;
+        }
+
+        private static Message GetTrueMessage(Message message, bool online)
+        {
+            Message tempMsg;
+
+            if (message.Name == ConfigManager.Config.RegData.Username)
+                tempMsg = new Message(HorizontalAlignment.Right, online)
+                    {Name = message.Name, Ts = message.Ts, Text = message.Text};
+            else if (string.IsNullOrEmpty(message.Name))
+                tempMsg = new Message(HorizontalAlignment.Center, online)
+                    {Name = message.Name, Ts = message.Ts, Text = message.Text};
+            else
+                tempMsg = new Message(HorizontalAlignment.Left, online)
+                    {Name = message.Name, Ts = message.Ts, Text = message.Text};
+
+            return tempMsg;
         }
 
         private void Post()
         {
             var msg = MessageBox.Text;
-
-            var httpWebRequest = (HttpWebRequest) WebRequest.Create("http://localhost:5000/api/Chat");
+            if (msg == "") return;
+            var httpWebRequest =
+                (HttpWebRequest) WebRequest.Create(
+                    $"http://{ConfigManager.Config.IP}:{ConfigManager.Config.Port}/api/Chat");
             httpWebRequest.ContentType = "application/json";
             httpWebRequest.Method = "POST";
             httpWebRequest.Headers.Add("Authorization", "Bearer " + ConfigManager.Config.Token);

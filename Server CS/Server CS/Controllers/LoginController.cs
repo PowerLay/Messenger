@@ -4,7 +4,6 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -24,11 +23,14 @@ namespace Server_CS.Controllers
         {
             _config = config;
         }
+
         [AllowAnonymous]
         [HttpGet]
-        public IActionResult Get(string username) {
-            return Ok(new { response = !(Program.RegDatas.Find(regData => regData.Username == username) == default) });
+        public IActionResult Get(string username)
+        {
+            return Ok(new {response = !(Program.RegDatas.Find(regData => regData.Username == username) == default)});
         }
+
         [HttpPost]
         public IActionResult Login([FromBody] RegData login)
         {
@@ -40,7 +42,7 @@ namespace Server_CS.Controllers
             JsonWorker.Save(Program.RegDatas);
 
             var tokenString = GenerateJSONWebToken(user);
-            response = Ok(new { token = tokenString });
+            response = Ok(new {token = tokenString});
 
             return response;
         }
@@ -69,16 +71,14 @@ namespace Server_CS.Controllers
         {
             RegData user = null;
 
-            if (Program.RegDatas.Find(regData => regData.Username == login.Username)==default)
+            if (Program.RegDatas.Find(regData => regData.Username == login.Username) == default)
             {
                 Program.RegDatas.Add(login);
                 return login;
             }
 
-            foreach (var regData in Program.RegDatas.Where(regData => regData.Username == login.Username && regData.Password == login.Password))
-            {
-                return regData;
-            }
+            foreach (var regData in Program.RegDatas.Where(regData =>
+                regData.Username == login.Username && regData.Password == login.Password)) return regData;
 
             return user;
         }

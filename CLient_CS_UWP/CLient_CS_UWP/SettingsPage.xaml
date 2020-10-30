@@ -60,10 +60,21 @@
                     <TextBox Name="WindowH" HorizontalAlignment="Right" Header="Heigth"
                              TextChanged="WindowH_OnTextChanged" Margin="5,0,0,0" />
                 </StackPanel>
-                <Button Content="Developers" Click="ButtonDev_click" Margin="0,20,0,0"/>
+
+                <TextBlock
+                    Style="{StaticResource TitleTextBlockStyle}"
+                    Margin="0,4,0,0"
+                    FontWeight="Normal"
+                    Text="IP and port (VPS)" />
+                <StackPanel>
+                    <TextBox Name="IPBox" Header="IP" TextChanging="IPBox_OnTextChanging" />
+                    <TextBox Name="PortBox" Header="Port"
+                             TextChanged="PortBox_OnTextChanged" />
+                </StackPanel>
+                <Button Content="Developers" Click="ButtonDev_click" Margin="0,20,0,0" />
             </StackPanel>
         </ScrollViewer>
         <TextBlock FontWeight="Normal" VerticalAlignment="Bottom"
-                    Text="Version 4.0" Opacity="0.5" Margin="5,5,5,5"/>
+                   Text="Version 4.1" Opacity="0.5" Margin="5,5,5,5" />
     </Grid>
 </Page>

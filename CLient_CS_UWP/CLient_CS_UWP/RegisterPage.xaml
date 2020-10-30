@@ -2,7 +2,6 @@
     x:Class="CLient_CS_UWP.RegisterPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:CLient_CS_UWP"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
@@ -38,11 +37,11 @@
                 <TextBlock
                     Style="{StaticResource TitleTextBlockStyle}"
                     Margin="0,4,0,0"
-                    Text="Register"  MinWidth="200"/>
+                    Text="Register" MinWidth="200" />
                 <TextBox Name="LoginBox" PlaceholderText="Nickname" />
                 <PasswordBox Name="PasswordBox1" PlaceholderText="Password" />
                 <PasswordBox Name="PasswordBox2" PlaceholderText="Repeat password" />
-                <Button Content="Register" HorizontalAlignment="Center" Click="Register_OnClick" />
+                <Button Content="Register" HorizontalAlignment="Center" Click="Register_OnClick" Margin="5" />
                 <TextBlock Text="" HorizontalAlignment="Center" Name="WarningText" />
             </StackPanel>
         </ScrollViewer>

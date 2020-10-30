@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 
@@ -10,7 +11,10 @@ namespace Server_CS
         ///     <para>Глобальный объект сообщения, в котором хранятся все сообщения в чате</para>
         /// </summary>
         public static List<RegData> RegDatas = new List<RegData>();
+
         public static List<Message> Messages = new List<Message>();
+        public static Dictionary<string, bool> OnlineUsers = new Dictionary<string, bool>();
+        public static Dictionary<string, DateTime> OnlineUsersTimeout = new Dictionary<string, DateTime>();
 
         public static void Main(string[] args)
         {
