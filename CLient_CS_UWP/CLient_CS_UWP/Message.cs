@@ -21,14 +21,23 @@ namespace CLient_CS_UWP
         public HorizontalAlignment MsgAlignment;
         public string TopHeight;
         public Visibility Visibility;
+        public SolidColorBrush OnlineBrush;
 
         public Message()
         {
         }
 
-        public Message(HorizontalAlignment align)
+        public Message(HorizontalAlignment align, bool online)
         {
             MsgAlignment = align;
+            if (online)
+            {
+                OnlineBrush = new SolidColorBrush(Colors.DarkGreen);
+            }
+            else
+            {
+                OnlineBrush = new SolidColorBrush(Colors.Black);
+            }
 
             // If received message, use accent background
             if (MsgAlignment == HorizontalAlignment.Left)

@@ -75,7 +75,11 @@ namespace CLient_CS_UWP
             {
                 foreach (var message in messages)
                 {
-                    MessagesListView.Items.Add(GetTrueMessage(message));
+                    bool online;
+                    if (string.IsNullOrEmpty(message.Name)) online = false;
+                    online = onlineUsers.ContainsKey(message.Name) && onlineUsers[message.Name];
+
+                    MessagesListView.Items.Add(GetTrueMessage(message, online));
                 }
                 prevRes = res;
                 return;
@@ -83,26 +87,31 @@ namespace CLient_CS_UWP
 
             if (MessagesListView.Items.Count != messages.Count)
                 for (var i = MessagesListView.Items.Count; i < messages.Count; i++)
-                    MessagesListView.Items?.Add(GetTrueMessage(messages[i]));
+                {
+                    bool online;
+                    if (string.IsNullOrEmpty(messages[i].Name)) online = false;
+                    online = onlineUsers.ContainsKey(messages[i].Name) && onlineUsers[messages[i].Name];
+                    MessagesListView.Items?.Add(GetTrueMessage(messages[i], online));
+                }
 
             prevRes = res;
         }
 
-        private static Message GetTrueMessage(Message message)
+        private static Message GetTrueMessage(Message message,bool online)
         {
             Message tempMsg;
 
             if (message.Name == ConfigManager.Config.RegData.Username)
             {
-                tempMsg = new Message(HorizontalAlignment.Right) {Name = message.Name, Ts = message.Ts, Text = message.Text};
+                tempMsg = new Message(HorizontalAlignment.Right, online) {Name = message.Name, Ts = message.Ts, Text = message.Text};
             }
             else if (string.IsNullOrEmpty(message.Name))
             {
-                tempMsg = new Message(HorizontalAlignment.Center) {Name = message.Name, Ts = message.Ts, Text = message.Text};
+                tempMsg = new Message(HorizontalAlignment.Center, online) {Name = message.Name, Ts = message.Ts, Text = message.Text};
             }
             else
             {
-                tempMsg = new Message(HorizontalAlignment.Left) {Name = message.Name, Ts = message.Ts, Text = message.Text};
+                tempMsg = new Message(HorizontalAlignment.Left, online) {Name = message.Name, Ts = message.Ts, Text = message.Text};
             }
 
             return tempMsg;
