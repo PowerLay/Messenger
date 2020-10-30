@@ -10,7 +10,7 @@
 
     <Page.Resources>
         <DataTemplate x:Key="MessageView" x:DataType="local:Message">
-            <Grid Height="Auto" Margin="4" HorizontalAlignment="{x:Bind MsgAlignment}">
+            <Grid Margin="4" HorizontalAlignment="{x:Bind MsgAlignment}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
@@ -20,15 +20,15 @@
                                Width="32"
                                Margin="6"
                                DisplayName="{Binding Name}"
-                               Visibility="{x:Bind IsMyMessage}" />
-                <Grid Grid.Column="1" Height="Auto" Margin="4" MaxWidth="700" MinHeight="75" MinWidth="150"
+                               Visibility="{x:Bind Visibility}" />
+                <Grid Grid.Column="1" Margin="4" MaxWidth="700" MinWidth="50"
                       Padding="10, 0, 0, 10" Background="{x:Bind BgColor}" CornerRadius="4">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="*" />
-                        <RowDefinition Height="*" />
+                        <RowDefinition Height="{x:Bind TopHeight}" />
+                        <RowDefinition Height="100*" />
                     </Grid.RowDefinitions>
 
-                    <TextBlock Grid.Row="0" Text="{x:Bind Name}" Padding="5, 10, 0, 0" FontSize="15"
+                    <TextBlock Grid.Row="0" Text="{x:Bind Name}" HorizontalAlignment="{x:Bind MsgAlignment}" Margin="0, 5, 5, 0" FontSize="15"
                                Foreground="{ThemeResource SystemControlForegroundAltHighBrush}"
                                FontWeight="Bold" />
                     <Grid Grid.Row="1">
@@ -38,10 +38,10 @@
                         </Grid.ColumnDefinitions>
                         
                         <TextBlock HorizontalAlignment="{x:Bind MsgAlignment}" Text="{x:Bind Text}"
-                                   Padding="5, 0, 10, 5" FontSize="20" TextWrapping="Wrap"
+                                   Padding="5, 5, 5, 2" FontSize="20" TextWrapping="Wrap"
                                    Foreground="{ThemeResource SystemControlForegroundAltMediumHighBrush}" />
                         <TextBlock Grid.Column="1" Text="{x:Bind HourMinute()}" HorizontalAlignment="Right"
-                                   Padding="10, 0, 5, 5" FontSize="15" VerticalAlignment="Bottom"
+                                   Padding="10, 0, 5, 2" FontSize="15" Opacity="0.75" VerticalAlignment="Bottom"
                                    Foreground="{ThemeResource SystemControlForegroundAltHighBrush}" />
                     </Grid>
                 </Grid>

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Drawing;
 using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media;
@@ -15,6 +14,46 @@ namespace CLient_CS_UWP
     /// </summary>
     public class Message
     {
+        private int _ts;
+        public SolidColorBrush BgColor;
+
+        public DateTime DateTime;
+        public HorizontalAlignment MsgAlignment;
+        public string TopHeight;
+        public Visibility Visibility;
+
+        public Message()
+        {
+        }
+
+        public Message(HorizontalAlignment align)
+        {
+            MsgAlignment = align;
+
+            // If received message, use accent background
+            if (MsgAlignment == HorizontalAlignment.Left)
+            {
+                BgColor = new SolidColorBrush(Colors.DarkGray);
+                Visibility = Visibility.Visible;
+                TopHeight = "*";
+            }
+
+            // If sent message, use light gray
+            else if (MsgAlignment == HorizontalAlignment.Right)
+            {
+                BgColor = new SolidColorBrush(Colors.DeepSkyBlue);
+                Visibility = Visibility.Collapsed;
+                TopHeight = "0";
+            }
+            // If sent message, use light gray
+            else if (MsgAlignment == HorizontalAlignment.Center)
+            {
+                BgColor = new SolidColorBrush(Colors.Gray);
+                Visibility = Visibility.Collapsed;
+                TopHeight = "0";
+            }
+        }
+
         public int Ts
         {
             get => _ts;
@@ -25,42 +64,9 @@ namespace CLient_CS_UWP
             }
         }
 
-        public DateTime DateTime;
-        private int _ts;
         public string Name { get; set; }
         public string Text { get; set; }
-        public HorizontalAlignment MsgAlignment { get; set; }
-        public SolidColorBrush BgColor { get; set; }
-        public Visibility IsMyMessage;
 
-        public Message()
-        {
-
-        }
-        public Message(HorizontalAlignment align)
-        {
-            MsgAlignment = align;
-
-            // If received message, use accent background
-            if (MsgAlignment == HorizontalAlignment.Left)
-            {
-                BgColor = new SolidColorBrush(Colors.DarkGray);
-                IsMyMessage = Visibility.Visible;
-            }
-
-            // If sent message, use light gray
-            else if (MsgAlignment == HorizontalAlignment.Right)
-            {
-                BgColor = new SolidColorBrush(Colors.DeepSkyBlue);
-                IsMyMessage = Visibility.Collapsed;
-            }
-            // If sent message, use light gray
-            else if (MsgAlignment == HorizontalAlignment.Center)
-            {
-                BgColor = new SolidColorBrush(Colors.Gray);
-                IsMyMessage = Visibility.Collapsed;
-            }
-        }
         public override string ToString()
         {
             return $"[{DateTime}] {Name}: {Text}";
