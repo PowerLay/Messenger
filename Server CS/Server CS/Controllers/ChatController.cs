@@ -33,7 +33,6 @@ namespace Messeger_Server.Controllers
         public string Post([FromBody] Message value)
         {
             value.Ts = (int) (DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
-            ;
             var msg = new Message {Name = User.Identity.Name, Text = value.Text, Ts = value.Ts};
             Console.WriteLine(msg);
             Program.Messages.Add(msg);
