@@ -26,8 +26,16 @@ namespace CLient_CS_UWP
         {
             InitializeComponent();
             var sr = new ServerResponse(this);
-            var updaterThread = new Thread(sr.Start);
+            var updaterThread = new Thread(sr.ChatUpdater);
             updaterThread.Start();
+
+            Thread onlineUpdaterThread = new Thread(sr.OnlineUpdater);
+            onlineUpdaterThread.Start();
+
+            if (string.IsNullOrEmpty(ConfigManager.Config.Token)) 
+            {
+                MessageBox.IsEnabled = false;
+            }
         }
 
         public async Task<string> GetAsync(string uri)
@@ -77,7 +85,10 @@ namespace CLient_CS_UWP
         private void Post()
         {
             var msg = MessageBox.Text;
-
+            if (msg =="")
+            {
+                return;
+            }
             var httpWebRequest =
                 (HttpWebRequest) WebRequest.Create(
                     $"http://{ConfigManager.Config.IP}:{ConfigManager.Config.Port}/api/Chat");

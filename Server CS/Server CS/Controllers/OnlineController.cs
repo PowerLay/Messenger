@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using static Server_CS.Program;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -16,33 +15,46 @@ namespace Server_CS.Controllers
         [HttpGet]
         public Dictionary<string, bool> Get()
         {
-            return OnlineUsers;
+            return Program.OnlineUsers;
         }
 
         // POST api/<OnlineController>
         [Authorize]
         [HttpPost]
-        public void Post()
+        public string Post()
         {
             var name = User.Identity.Name;
-            if (name == null) return;
-            if (OnlineUsers.ContainsKey(name))
+            if (name == null) return "No name";
+            if (Program.OnlineUsers.ContainsKey(name))
             {
-                OnlineUsersTimeout[name] = DateTime.Now;
+                if (!Program.OnlineUsers[name])
+                {
+                    Program.Messages.Add(new Message
+                    {
+                        Name = "",
+                        Text = $"{name} connected",
+                        Ts = (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds
+                    });
+                    JsonWorker.Save(Program.Messages);
+                    Program.OnlineUsers[name] = true;
+                }
+                Program.OnlineUsersTimeout[name] = DateTime.Now;
             }
             else
             {
-                OnlineUsers.Add(name, true);
-                OnlineUsersTimeout.Add(name, DateTime.Now);
+                Program.OnlineUsers.Add(name, true);
+                Program.OnlineUsersTimeout.Add(name, DateTime.Now);
 
-                Messages.Add(new Message
+                Program.Messages.Add(new Message
                 {
                     Name = "",
                     Text = $"{name} connected",
-                    Ts = (int) (DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds
+                    Ts = (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds
                 });
-
+                JsonWorker.Save(Program.Messages);
             }
+
+            return "ok";
         }
     }
 }
