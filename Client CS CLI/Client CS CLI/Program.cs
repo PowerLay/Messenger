@@ -61,6 +61,9 @@ namespace Client_CS_CLI
             } while (true);
 
 
+            Thread onlineUpdaterThread = new Thread(OnlineUpdater);
+            onlineUpdaterThread.Start();
+
             while (true)
                 try
                 {
@@ -72,6 +75,43 @@ namespace Client_CS_CLI
                     // ignored
                 }
         }
+
+        private static async Task PostOnline()
+        {
+            try
+            {
+                var httpWebRequest =
+                    (HttpWebRequest)WebRequest.Create("http://localhost:5000/api/Online");
+                httpWebRequest.ContentType = "application/json";
+                httpWebRequest.Method = "POST";
+                httpWebRequest.Headers.Add("Authorization", "Bearer " + ConfigManager.Config.Token);
+                var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+                var streamReader = new StreamReader(httpResponse.GetResponseStream());
+                var result = await streamReader.ReadToEndAsync();
+                if (result != "ok") throw new Exception("Something went wrong");
+            }
+            catch (Exception)
+            {
+
+            }
+        }
+
+        public static async void OnlineUpdater()
+        {
+            while (true)
+            {
+                try
+                {
+                    await PostOnline();
+                    Thread.Sleep(500);
+                }
+                catch (Exception)
+                {
+                    // ignored
+                }
+            }
+        }
+
         class TokenResponse
         {
             public string Token { get; set; } = "";
@@ -90,7 +130,7 @@ namespace Client_CS_CLI
             }
         }
 
-        private static async Task GetHistoryMessages()
+        private static async void GetHistoryMessages()
         {
             while (true)
             {
