@@ -17,9 +17,11 @@ namespace Server_CS
         {
             Configuration = configuration;
 
-            var onlineCheckerThread = new Thread(OnlineCheckerCycle) { Name = "OnlineCheckerThread" };
+            var onlineCheckerThread = new Thread(OnlineCheckerCycle) {Name = "OnlineCheckerThread"};
             onlineCheckerThread.Start();
         }
+
+        public IConfiguration Configuration { get; }
 
         public static void OnlineCheckerCycle()
         {
@@ -33,7 +35,7 @@ namespace Server_CS
                         {
                             Name = "",
                             Text = $"{user.Key} left",
-                            Ts = (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds
+                            Ts = (int) (DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds
                         });
                         JsonWorker.Save(Program.Messages);
 
@@ -43,7 +45,6 @@ namespace Server_CS
                 Thread.Sleep(100);
             }
         }
-        public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)

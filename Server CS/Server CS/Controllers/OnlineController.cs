@@ -33,11 +33,12 @@ namespace Server_CS.Controllers
                     {
                         Name = "",
                         Text = $"{name} connected",
-                        Ts = (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds
+                        Ts = (int) (DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds
                     });
                     JsonWorker.Save(Program.Messages);
                     Program.OnlineUsers[name] = true;
                 }
+
                 Program.OnlineUsersTimeout[name] = DateTime.Now;
             }
             else
@@ -49,7 +50,7 @@ namespace Server_CS.Controllers
                 {
                     Name = "",
                     Text = $"{name} connected",
-                    Ts = (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds
+                    Ts = (int) (DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds
                 });
                 JsonWorker.Save(Program.Messages);
             }
