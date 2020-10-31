@@ -25,21 +25,21 @@ namespace Client_CS_CLI
                 var nick = Console.ReadLine();
                 Console.Write("Enter your password> ");
                 var password = Console.ReadLine();
-                var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://localhost:5000/api/Login");
+                var httpWebRequest = (HttpWebRequest) WebRequest.Create("http://localhost:5000/api/Login");
                 httpWebRequest.ContentType = "application/json";
                 httpWebRequest.Method = "POST";
 
-                var regData = new RegData() { Username = nick, Password = password };
+                var regData = new RegData {Username = nick, Password = password};
                 var json = JsonConvert.SerializeObject(regData);
                 var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream());
                 streamWriter.Write(json);
                 streamWriter.Close();
 
-                string result = "";
+                var result = "";
 
                 try
                 {
-                    var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+                    var httpResponse = (HttpWebResponse) httpWebRequest.GetResponse();
                     var streamReader = new StreamReader(httpResponse.GetResponseStream());
                     result = streamReader.ReadToEnd();
                 }
@@ -49,19 +49,19 @@ namespace Client_CS_CLI
                     continue;
                 }
 
-                var temp = JsonConvert.DeserializeObject<TokenResponse>(result);
+                var temp = JsonConvert.DeserializeAnonymousType(result,new {Token =""});
 
 
-                ConfigManager.Config.Token = temp.Token;
+                Config.Token = temp.Token;
 
-                ConfigManager.Config.RegData = regData;
+                Config.RegData = regData;
                 Console.WriteLine("Success!");
-                ConfigManager.WriteConfig();
+                WriteConfig();
                 break;
             } while (true);
 
 
-            Thread onlineUpdaterThread = new Thread(OnlineUpdater);
+            var onlineUpdaterThread = new Thread(OnlineUpdater);
             onlineUpdaterThread.Start();
 
             while (true)
@@ -81,25 +81,23 @@ namespace Client_CS_CLI
             try
             {
                 var httpWebRequest =
-                    (HttpWebRequest)WebRequest.Create("http://localhost:5000/api/Online");
+                    (HttpWebRequest) WebRequest.Create("http://localhost:5000/api/Online");
                 httpWebRequest.ContentType = "application/json";
                 httpWebRequest.Method = "POST";
-                httpWebRequest.Headers.Add("Authorization", "Bearer " + ConfigManager.Config.Token);
-                var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+                httpWebRequest.Headers.Add("Authorization", "Bearer " + Config.Token);
+                var httpResponse = (HttpWebResponse) httpWebRequest.GetResponse();
                 var streamReader = new StreamReader(httpResponse.GetResponseStream());
                 var result = await streamReader.ReadToEndAsync();
                 if (result != "ok") throw new Exception("Something went wrong");
             }
             catch (Exception)
             {
-
             }
         }
 
         public static async void OnlineUpdater()
         {
             while (true)
-            {
                 try
                 {
                     await PostOnline();
@@ -109,20 +107,14 @@ namespace Client_CS_CLI
                 {
                     // ignored
                 }
-            }
-        }
-
-        class TokenResponse
-        {
-            public string Token { get; set; } = "";
         }
 
         public static async Task<string> GetAsync(string uri)
         {
-            var request = (HttpWebRequest)WebRequest.Create(uri);
+            var request = (HttpWebRequest) WebRequest.Create(uri);
             request.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
 
-            using (var response = (HttpWebResponse)await request.GetResponseAsync())
+            using (var response = (HttpWebResponse) await request.GetResponseAsync())
             using (var stream = response.GetResponseStream())
             using (var reader = new StreamReader(stream))
             {
@@ -166,8 +158,9 @@ namespace Client_CS_CLI
                 }
             }
         }
+
         /// <summary>
-        /// <para>Функция ввода и печати сообщения в час (отправляется POST запрос на сервер)</para>
+        ///     <para>Функция ввода и печати сообщения в час (отправляется POST запрос на сервер)</para>
         /// </summary>
         private static void Post()
         {
@@ -180,7 +173,7 @@ namespace Client_CS_CLI
                 return;
             }
 
-            var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://localhost:5000/api/Chat");
+            var httpWebRequest = (HttpWebRequest) WebRequest.Create("http://localhost:5000/api/Chat");
             httpWebRequest.ContentType = "application/json";
             httpWebRequest.Method = "POST";
             httpWebRequest.Headers.Add("Authorization", "Bearer " + Config.Token);
@@ -190,25 +183,25 @@ namespace Client_CS_CLI
         }
 
         /// <summary>
-        /// <para>Функция получения ответа от сервера</para>
+        ///     <para>Функция получения ответа от сервера</para>
         /// </summary>
         /// <param name="httpWebRequest"></param>
         private static void GetAnswer(HttpWebRequest httpWebRequest)
         {
-            var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+            var httpResponse = (HttpWebResponse) httpWebRequest.GetResponse();
             using var streamReader = new StreamReader(httpResponse.GetResponseStream());
             var result = streamReader.ReadToEnd();
             if (result != "ok") Console.WriteLine("Something went wrong");
         }
 
         /// <summary>
-        /// <para>Функция отправки сообщения на сервер</para>
+        ///     <para>Функция отправки сообщения на сервер</para>
         /// </summary>
         /// <param name="msg"></param>
         /// <param name="httpWebRequest"></param>
         private static void SendMessage(string msg, HttpWebRequest httpWebRequest)
         {
-            var json = JsonConvert.SerializeObject(new Message { Text = msg });
+            var json = JsonConvert.SerializeObject(new Message {Text = msg});
             using var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream());
             streamWriter.Write(json);
             streamWriter.Close();
