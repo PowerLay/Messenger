@@ -10,14 +10,14 @@ namespace Server_CS
         /// <summary>
         ///     Файл для сохранения сообщений в виде json массива
         /// </summary>
-        private static readonly string MessagesPath = @"messages.json";
+        private const string MessagesPath = @"messages.json";
 
-        private static readonly string RegDataPath = @"regData.json";
+        private const string RegDataPath = @"regData.json";
 
         /// <summary>
         ///     Функция сохранения в файл
         /// </summary>
-        /// <param name="messages"></param>
+        /// <param name="messages">Массив сообщений</param>
         public static async void Save(List<Message> messages)
         {
             await using var streamWriter = new StreamWriter(MessagesPath);
@@ -27,7 +27,7 @@ namespace Server_CS
         /// <summary>
         ///     Функция сохранения в файл
         /// </summary>
-        /// <param name="messages"></param>
+        /// <param name="regDatas">массив связок логин/пароль</param>
         public static async void Save(List<RegData> regDatas)
         {
             await using var streamWriter = new StreamWriter(RegDataPath);
@@ -37,7 +37,6 @@ namespace Server_CS
         /// <summary>
         ///     Функция загрузки сообщений из файла, десирилизованный из json в List <Message> объект
         /// </summary>
-        /// <returns></returns>
         public static async void Load()
         {
             if (!File.Exists(MessagesPath))

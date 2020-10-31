@@ -11,14 +11,21 @@ namespace Server_CS.Controllers
     [ApiController]
     public class OnlineController : ControllerBase
     {
-        // GET: api/<OnlineController>
+        /// <summary>
+        ///     Запрос на получение всех пользователей и их состояния (В сети/Не в сети)
+        ///     <br>GET: api/Online</br>
+        /// </summary>
+        /// <returns>Словарь пользователей (В сети/Не в сети)</returns>
         [HttpGet]
         public Dictionary<string, bool> Get()
         {
             return Program.OnlineUsers;
         }
-
-        // POST api/<OnlineController>
+        /// <summary>
+        ///     Получения сигнала онлайн пользователя
+        ///     <br>POST: api/Online</br>
+        /// </summary>
+        /// <returns>Возвращает ok если всё прошло успешно</returns>
         [Authorize]
         [HttpPost]
         public string Post()

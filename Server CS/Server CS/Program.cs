@@ -8,14 +8,29 @@ namespace Server_CS
     public class Program
     {
         /// <summary>
-        ///     <para>Глобальный объект сообщения, в котором хранятся все сообщения в чате</para>
+        ///     Глобальный объект в котором хранятся связки логин/пароль
         /// </summary>
         public static List<RegData> RegDatas = new List<RegData>();
 
+        /// <summary>
+        ///     Глобальный объект в котором хранится вся история сообщений
+        /// </summary>
         public static List<Message> Messages = new List<Message>();
+
+        /// <summary>
+        ///     Словарь Пользователей (В сети/Не в сети)
+        /// </summary>
         public static Dictionary<string, bool> OnlineUsers = new Dictionary<string, bool>();
+
+        /// <summary>
+        ///     Словарь пользователей и времени последнего сигнала онлайн
+        /// </summary>
         public static Dictionary<string, DateTime> OnlineUsersTimeout = new Dictionary<string, DateTime>();
 
+        /// <summary>
+        ///     Точка входа
+        /// </summary>
+        /// <param name="args">Входящие аргументы</param>
         public static void Main(string[] args)
         {
             JsonWorker.Load();
@@ -23,10 +38,9 @@ namespace Server_CS
         }
 
         /// <summary>
-        ///     <para>Создание веб-сервера для обработки запросов</para>
+        ///     Создание веб-сервера для обработки запросов
         /// </summary>
-        /// <param name="args"></param>
-        /// <returns></returns>
+        /// <param name="args">Входящие аргументы</param>
         public static IHostBuilder CreateHostBuilder(string[] args)
         {
             return Host.CreateDefaultBuilder(args)

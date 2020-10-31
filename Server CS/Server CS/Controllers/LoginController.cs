@@ -9,21 +9,32 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-
 namespace Server_CS.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class LoginController : ControllerBase
     {
+        /// <summary>
+        ///     Объект работы с файлом конфигурации приложения
+        /// </summary>
         private readonly IConfiguration _config;
 
+        /// <summary>
+        ///     Конструктор
+        /// </summary>
+        /// <param name="config">Объект работы с файлом конфигурации приложения</param>
         public LoginController(IConfiguration config)
         {
             _config = config;
         }
 
+        /// <summary>
+        ///     Проверка на уникальность ника
+        ///     <br> GET api/Login</br>
+        /// </summary>
+        /// <param name="username">Ник</param>
+        /// <returns>Возвращает истину если ник занят</returns>
         [AllowAnonymous]
         [HttpGet]
         public IActionResult Get(string username)
@@ -31,6 +42,12 @@ namespace Server_CS.Controllers
             return Ok(new {response = Program.RegDatas.Find(regData => regData.Username == username) != default});
         }
 
+        /// <summary>
+        ///     Функция Логин/Регистрация
+        ///     <br> POST api/Login</br>
+        /// </summary>
+        /// <param name="login">Связка логин/пароль</param>
+        /// <returns>Вернет ok если всё успешно</returns>
         [HttpPost]
         public IActionResult Login([FromBody] RegData login)
         {
@@ -48,6 +65,11 @@ namespace Server_CS.Controllers
             return response;
         }
 
+        /// <summary>
+        ///     Функция генерации токена
+        /// </summary>
+        /// <param name="userInfo">Связка логин/пароль</param>
+        /// <returns>Токен</returns>
         private string GenerateJSONWebToken(RegData userInfo)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
@@ -68,6 +90,12 @@ namespace Server_CS.Controllers
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
+        /// <summary>
+        ///     Функция авторизации пользователя.
+        ///     <br>Если нету то создаст.</br>
+        /// </summary>
+        /// <param name="login">Связка логин/пароль</param>
+        /// <returns>Пользователя чата</returns>
         private RegData AuthenticateUser(RegData login)
         {
             RegData user = null;
