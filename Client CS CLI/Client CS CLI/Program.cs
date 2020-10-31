@@ -1,73 +1,31 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Threading;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 
 namespace Client_CS_CLI
 {
-    internal class Program : ConfigManager
+    internal class Program
     {
-        private static int _len;
-
-        private static void Main(string[] args)
+        /// <summary>
+        ///     Точка входа
+        /// </summary>
+        private static void Main()
         {
-            LoadConfig();
+            ConfigManager.LoadConfig();
 
-            do
-            {
-                Console.Write("Enter your nick> ".PadRight(Console.BufferWidth - 1));
-                Console.Write("".PadRight(Console.BufferWidth - 1));
-                Console.SetCursorPosition(0, 0);
-                Console.Write("Enter your nick> ");
-                var nick = Console.ReadLine();
-                Console.Write("Enter your password> ");
-                var password = Console.ReadLine();
-                var httpWebRequest = (HttpWebRequest) WebRequest.Create("http://localhost:5000/api/Login");
-                httpWebRequest.ContentType = "application/json";
-                httpWebRequest.Method = "POST";
+            Login();
 
-                var regData = new RegData {Username = nick, Password = password};
-                var json = JsonConvert.SerializeObject(regData);
-                var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream());
-                streamWriter.Write(json);
-                streamWriter.Close();
-
-                var result = "";
-
-                try
-                {
-                    var httpResponse = (HttpWebResponse) httpWebRequest.GetResponse();
-                    var streamReader = new StreamReader(httpResponse.GetResponseStream());
-                    result = streamReader.ReadToEnd();
-                }
-                catch (Exception)
-                {
-                    Console.SetCursorPosition(0, 0);
-                    continue;
-                }
-
-                var temp = JsonConvert.DeserializeAnonymousType(result,new {Token =""});
-
-
-                Config.Token = temp.Token;
-
-                Config.RegData = regData;
-                Console.WriteLine("Success!");
-                WriteConfig();
-                break;
-            } while (true);
-
-
-            var onlineUpdaterThread = new Thread(OnlineUpdater);
+            var onlineUpdaterThread = new Thread(ServerResponse.OnlineUpdater) {Name = "OnlineUpdaterThread"};
             onlineUpdaterThread.Start();
+
+            var historyUpdaterThread = new Thread(ServerResponse.GetHistoryMessages) {Name = "HistoryUpdaterThread"};
+            historyUpdaterThread.Start();
 
             while (true)
                 try
                 {
-                    GetHistoryMessages();
                     while (true) Post();
                 }
                 catch (Exception)
@@ -76,99 +34,78 @@ namespace Client_CS_CLI
                 }
         }
 
-        private static async Task PostOnline()
+        /// <summary>
+        ///     Запрос у пользователя уникального ника/пароля
+        /// </summary>
+        private static void Login()
         {
-            try
+            do
             {
-                var httpWebRequest =
-                    (HttpWebRequest) WebRequest.Create("http://localhost:5000/api/Online");
+                var httpWebRequest = (HttpWebRequest) WebRequest.Create("http://localhost:5000/api/Login");
                 httpWebRequest.ContentType = "application/json";
                 httpWebRequest.Method = "POST";
-                httpWebRequest.Headers.Add("Authorization", "Bearer " + Config.Token);
-                var httpResponse = (HttpWebResponse) httpWebRequest.GetResponse();
-                var streamReader = new StreamReader(httpResponse.GetResponseStream());
-                var result = await streamReader.ReadToEndAsync();
-                if (result != "ok") throw new Exception("Something went wrong");
-            }
-            catch (Exception)
-            {
-            }
-        }
 
-        public static async void OnlineUpdater()
-        {
-            while (true)
+                string result;
+                var regData = GetRegData(httpWebRequest);
+
                 try
                 {
-                    await PostOnline();
-                    Thread.Sleep(500);
+                    var httpResponse = (HttpWebResponse) httpWebRequest.GetResponse();
+                    var streamReader =
+                        new StreamReader(httpResponse.GetResponseStream() ?? throw new InvalidOperationException());
+                    result = streamReader.ReadToEnd();
                 }
                 catch (Exception)
                 {
-                    // ignored
+                    Console.SetCursorPosition(0, 0);
+                    continue;
                 }
+
+                var temp = JsonConvert.DeserializeAnonymousType(result, new {Token = ""});
+
+                ConfigManager.Config.Token = temp.Token;
+
+                ConfigManager.Config.RegData = regData;
+                Console.WriteLine("Success!");
+                ConfigManager.WriteConfig();
+                break;
+            } while (true);
         }
 
-        public static async Task<string> GetAsync(string uri)
+        /// <summary>
+        ///     Запрос на уникальность ника
+        /// </summary>
+        /// <param name="httpWebRequest">Веб запрос</param>
+        /// <returns>Связка Логин пароль</returns>
+        private static RegData GetRegData(HttpWebRequest httpWebRequest)
         {
-            var request = (HttpWebRequest) WebRequest.Create(uri);
-            request.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
+            Console.Write("Enter your nick> ".PadRight(Console.BufferWidth - 1));
+            Console.Write("".PadRight(Console.BufferWidth - 1));
+            Console.SetCursorPosition(0, 0);
+            Console.Write("Enter your nick> ");
+            var nick = Console.ReadLine();
+            Console.Write("Enter your password> ");
+            var password = Console.ReadLine();
 
-            using (var response = (HttpWebResponse) await request.GetResponseAsync())
-            using (var stream = response.GetResponseStream())
-            using (var reader = new StreamReader(stream))
-            {
-                return await reader.ReadToEndAsync();
-            }
-        }
+            var regData = new RegData {Username = nick, Password = password};
+            var json = JsonConvert.SerializeObject(regData);
+            var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream());
+            streamWriter.Write(json);
+            streamWriter.Close();
 
-        private static async void GetHistoryMessages()
-        {
-            while (true)
-            {
-                await UpdateHistory();
-
-                Thread.Sleep(Config.MillisecondsSleep);
-            }
-        }
-
-        private static async Task UpdateHistory()
-        {
-            var res = await GetAsync("http://localhost:5000/api/Chat");
-
-            if (res != "[]")
-            {
-                var messages = JsonConvert.DeserializeObject<List<Message>>(res);
-
-                if (_len != messages.Count)
-                {
-                    var x = Console.CursorLeft;
-                    var y = Console.CursorTop;
-
-                    Console.MoveBufferArea(0, y, x, 1, 0, messages.Count + 1);
-
-                    var history = "";
-                    foreach (var message in messages)
-                        history += message.ToString().PadRight(Console.BufferWidth - 1) + "\n";
-                    Console.SetCursorPosition(0, 1);
-                    Console.WriteLine(history);
-                    Console.SetCursorPosition(x, messages.Count + 1);
-
-                    _len = messages.Count;
-                }
-            }
+            return regData;
         }
 
         /// <summary>
         ///     <para>Функция ввода и печати сообщения в час (отправляется POST запрос на сервер)</para>
         /// </summary>
-        private static void Post()
+        private static async void Post()
         {
             Console.Write("Enter message(or /u for update)>        \b\b\b\b\b\b\b");
             var msg = Console.ReadLine();
             if (msg.Equals("/update") || msg.Equals("/u"))
             {
-                UpdateHistory();
+                await ServerResponse.UpdateHistory();
                 Console.SetCursorPosition(0, Console.CursorTop - 1);
                 return;
             }
@@ -176,16 +113,16 @@ namespace Client_CS_CLI
             var httpWebRequest = (HttpWebRequest) WebRequest.Create("http://localhost:5000/api/Chat");
             httpWebRequest.ContentType = "application/json";
             httpWebRequest.Method = "POST";
-            httpWebRequest.Headers.Add("Authorization", "Bearer " + Config.Token);
+            httpWebRequest.Headers.Add("Authorization", "Bearer " + ConfigManager.Config.Token);
 
             SendMessage(msg, httpWebRequest);
             GetAnswer(httpWebRequest);
         }
 
         /// <summary>
-        ///     <para>Функция получения ответа от сервера</para>
+        ///     Функция получения ответа от сервер после отправки сообщения
         /// </summary>
-        /// <param name="httpWebRequest"></param>
+        /// <param name="httpWebRequest">Веб запрос</param>
         private static void GetAnswer(HttpWebRequest httpWebRequest)
         {
             var httpResponse = (HttpWebResponse) httpWebRequest.GetResponse();
@@ -195,10 +132,10 @@ namespace Client_CS_CLI
         }
 
         /// <summary>
-        ///     <para>Функция отправки сообщения на сервер</para>
+        ///     Функция отправки сообщения на сервер
         /// </summary>
-        /// <param name="msg"></param>
-        /// <param name="httpWebRequest"></param>
+        /// <param name="msg">Сообщение</param>
+        /// <param name="httpWebRequest">Веб запрос</param>
         private static void SendMessage(string msg, HttpWebRequest httpWebRequest)
         {
             var json = JsonConvert.SerializeObject(new Message {Text = msg});
