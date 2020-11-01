@@ -3,14 +3,21 @@
     <!--<div class="chatbox_date">
       {{ genDate(ts) }}
     </div>-->
-    <div
+    <div class='chatbox_serverMsg' v-if="uname==''">
+      {{ text }}
+    </div>
+    <div v-else
       class="chatbox__messageContainer"
       :class="out ? 'chatbox__messageContainer--right' : ''"
       :style="{
         //'margin-top': out ? '12px' : '4px',
         //'margin-bottom': !out ? '12px' : '4px'
       }"
-    >
+      ><div class="im_initials_avatar -color1 im_dialog_item_photo chatbox_avatar" v-if="!out">
+        {{ uname[0] }}
+        <div class="im_dialog_item_online" v-if="online"></div>
+      </div>
+      
       <div
         class="chatbox__message"
         :style="{
@@ -37,6 +44,7 @@ export default {
     uname: String,
     text: String,
     out: Boolean,
+    online: Boolean,
     ts: Number
   },
   methods: {

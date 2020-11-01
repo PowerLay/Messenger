@@ -6,8 +6,9 @@
           <div class="chatbox__messages" id="scroller">
             <Message
               v-for="msg in messages"
-              :text="msg.text"
+              :text="msg.text + ' ' +onlineUsers[msg.name]"
               :out="msg.name == settings.username"
+              :online="onlineUsers[msg.name]"
               :uname="msg.name"
               :ts="msg.ts"
               :key="msg.ts + '_' + Math.random()"
@@ -18,7 +19,7 @@
       </div>
     </div>
     <v-footer fixed class="font-weight-medium">
-      <MessageInput ref="minput"/>
+      <MessageInput ref="minput" />
     </v-footer>
   </div>
 </template>
@@ -43,7 +44,7 @@ export default {
   watch: {
     rawMessages(n, o) {
       // find difference between new and old
-      // then call addMessage() function to apply
+      // then call something like addMessage() function to apply
       // * may be u should create some temporary messages store
       // * just not to update source object fully every time
       // * only to add new messages
@@ -52,36 +53,84 @@ export default {
         //console.info(diff);
         this.messages = [...this.messages, ...diff];
       }
+    },
+    rawOnlineUsers(n, o) {
+      const diff = this.lodash.differenceWith(n, o, this.lodash.isEqual);
+      console.info(o,n)
+      if (diff.length) {
+        console.info(111)
+        this.onlineUsers = [...this.onlineUsers, ...diff];
+      } 
     }
   },
   methods: {
-    hideEmojiDialog(){
-      this.$refs.minput.hideEmojiDialog()
+    hideEmojiDialog() {
+      this.$refs.minput.hideEmojiDialog();
     },
-    async subscribe() {
+    async subscribe(url, method, auth, done, timeout = 200) {
       try {
-        const response = await fetch("http://localhost:5000/api/Chat");
+        const a = {
+          Authorization: "Bearer " + this.settings.token
+        };
+        const response = await fetch(url, {
+          method: method,
+          headers: auth ? a : {},
+          body: method == "POST" ? {} : null
+        });
         if (response.status != 200) {
-          await new Promise(resolve => setTimeout(resolve, 1000)); // sleep(1sec)
-          await this.subscribe();
+          await new Promise(resolve => setTimeout(resolve, 1000)); // sleep(1 sec)
+          await this.subscribe(...arguments);
         } else {
           // Get and show the message
-          const message = await response.text();
-          this.rawMessages = JSON.parse(message);
+          const resp = await response.text();
+          done(resp);
           // Call subscribe() again to get the next message
-          await new Promise(resolve => setTimeout(resolve, 200)); // sleep(0.2sec)
-          await this.subscribe();
+          await new Promise(resolve => setTimeout(resolve, timeout)); // sleep(n msec)
+          await this.subscribe(...arguments);
         }
       } catch (e) {
+        console.error(e);
         await new Promise(resolve => setTimeout(resolve, 1000)); // sleep(1sec)
-        await this.subscribe();
+        await this.subscribe(...arguments);
       }
+    },
+    async subscribeToMessages() {
+      const t = this.globalThis;
+      this.subscribe("http://localhost:5000/api/Chat", "GET", false, function(
+        resp
+      ) {
+        t.rawMessages = JSON.parse(resp);
+      });
+    },
+
+    async subscribeToOnlinePost() {
+      this.subscribe(
+        "http://localhost:5000/api/Online",
+        "POST",
+        true,
+        function() {},
+        500
+      );
+    },
+    async subscribeToOnlineGet() {
+      const t = this.globalThis;
+      this.subscribe(
+        "http://localhost:5000/api/Online",
+        "GET",
+        true,
+        function(d) {
+          t.rawOnlineUsers = JSON.parse(d);
+        },
+        400
+      );
     }
   },
   mounted() {
     this.globalThis = this; // trick to bypass eslynt shit
     const t = this.globalThis;
-    this.subscribe();
+    //this.subscribeToMessages();
+    this.subscribeToOnlinePost();
+    this.subscribeToOnlineGet();
 
     const w = setInterval(function() {
       // sure there's no 'onRendered' event, so we cant catch it other way
@@ -97,11 +146,38 @@ export default {
     store,
     messages: [],
     rawMessages: [],
+    onlineUsers: [],
+    rawOnlineUsers: []
   })
 };
 </script>
 
 <style>
+/* позаимствовано из клиента вк */
+.im_initials_avatar.-color1 {
+    background-image: radial-gradient(circle at center 0px, #FFC247, #FFA21F);
+}
+.im_initials_avatar {
+    border-radius: 50%;
+    text-align: center;
+    text-transform: uppercase;
+    user-select: none;
+}
+.chatbox_avatar {
+  width: 44px; height: 44px; font-size: 22px; line-height: 44px; letter-spacing: 0.4px;
+}
+.im_dialog_item_online {
+    content: '';
+    position: relative;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #71cb50;
+    border: 2px #71cb50 solid;
+    bottom: 9px;
+    right: 1px;
+}
+
 @import url("https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700");
 * {
   box-sizing: border-box;
@@ -158,29 +234,6 @@ body {
   width: 100%;
   height: 100%;
 }
-.chatbox__info,
-.chatbox__navigation {
-  align-self: flex-start;
-  width: 100%;
-  border-bottom: 1px solid #f2f2f2;
-}
-.chatbox__info {
-  padding: 10px 10px;
-  display: flex;
-  align-items: center;
-  text-transform: capitalize;
-  justify-content: space-between;
-}
-.chatbox__info img {
-  cursor: pointer;
-}
-.chatbox__navigation {
-  display: flex;
-  height: auto;
-  align-items: center;
-  text-align: left;
-  padding: 8px 10px;
-}
 
 .chatbox__chat {
   position: relative;
@@ -229,6 +282,9 @@ body {
   left: -50px; /*no seconds: -38px;*/
   right: auto;
 }
+.chatbox_serverMsg {
+  text-align: center;
+}
 .chatbox__date {
   width: 100%;
   height: 20px;
@@ -252,98 +308,7 @@ body {
   box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
   z-index: 2;
 }
-.chatbox__popupMenu button,
-.chatbox__colorPalette button,
-.chatbox__userMenu button {
-  width: 100%;
-  padding: 8px 10px;
-  cursor: pointer;
-  background-color: #fff;
-  border: none;
-}
-.chatbox__popupMenu button:hover,
-.chatbox__colorPalette button:hover,
-.chatbox__userMenu button:hover {
-  background: #f4f4f4;
-}
-.chatbox__popupMenu button:last-child,
-.chatbox__colorPalette button:last-child,
-.chatbox__userMenu button:last-child {
-  color: #f00;
-}
-.chatbox__popupMenu button:disabled,
-.chatbox__colorPalette button:disabled,
-.chatbox__userMenu button:disabled,
-.chatbox__popupMenu button button[disabled],
-.chatbox__colorPalette button button[disabled],
-.chatbox__userMenu button button[disabled] {
-  cursor: default;
-  color: #bbb;
-}
-.chatbox__popupMenu button:disabled:hover,
-.chatbox__colorPalette button:disabled:hover,
-.chatbox__userMenu button:disabled:hover,
-.chatbox__popupMenu button button[disabled]:hover,
-.chatbox__colorPalette button button[disabled]:hover,
-.chatbox__userMenu button button[disabled]:hover {
-  background: #fff;
-}
-.chatbox__colorPalette {
-  width: auto;
-  padding: 9px;
-  display: grid;
-  grid-template: 1fr 1fr 1fr/1fr 1fr 1fr 1fr;
-  grid-gap: 5px;
-}
-.chatbox__userMenu {
-  right: auto;
-  left: 10px;
-}
-.chatbox__color {
-  width: 25px;
-  height: 25px;
-  border-radius: 30px;
-  cursor: pointer;
-}
-.chatbox__color:hover {
-  opacity: 0.9;
-}
-.chatbox__color:nth-child(1) {
-  background-color: #ff7ca8;
-}
-.chatbox__color:nth-child(2) {
-  background-color: #247ba0;
-}
-.chatbox__color:nth-child(3) {
-  background-color: #70c1b3;
-}
-.chatbox__color:nth-child(4) {
-  background-color: #b2dbbf;
-}
-.chatbox__color:nth-child(5) {
-  background-color: #ff1654;
-}
-.chatbox__color:nth-child(6) {
-  background-color: #ffba08;
-}
-.chatbox__color:nth-child(7) {
-  background-color: #3f88c5;
-}
-.chatbox__color:nth-child(8) {
-  background-color: #23bf73;
-}
-.chatbox__color:nth-child(9) {
-  background-color: #ff0f80;
-}
-.chatbox__color:nth-child(10) {
-  background-color: #fe4e00;
-}
-.chatbox__color:nth-child(11) {
-  background-color: #f19a3e;
-}
-.chatbox__color:nth-child(12) {
-  background-color: #09f;
-}
+
 .darkMode {
   color: #fff;
   background: #222;
