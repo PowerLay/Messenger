@@ -22,6 +22,8 @@ namespace CLient_CS_UWP
             InitializeComponent();
             LoginBox.Text = ConfigManager.Config.RegData.Username;
             PasswordBox.Password = ConfigManager.Config.RegData.Password;
+            LoginBox.Focus(FocusState.Programmatic);
+
         }
 
         private void ButtonBase_OnClick(object sender, RoutedEventArgs e)

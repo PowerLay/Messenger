@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 using Newtonsoft.Json;
 
 namespace Server_CS
@@ -20,8 +21,20 @@ namespace Server_CS
         /// <param name="messages">Массив сообщений</param>
         public static async void Save(List<Message> messages)
         {
-            await using var streamWriter = new StreamWriter(MessagesPath);
-            await streamWriter.WriteAsync(JsonConvert.SerializeObject(messages));
+            var NumberOfRetries = 3;
+            var DelayOnRetry = 1000;
+
+            for (var i = 1; i <= NumberOfRetries; ++i)
+                try
+                {
+                    await using var streamWriter = new StreamWriter(MessagesPath);
+                    await streamWriter.WriteAsync(JsonConvert.SerializeObject(messages));
+                    break;
+                }
+                catch (IOException e) when (i <= NumberOfRetries)
+                {
+                    Thread.Sleep(DelayOnRetry);
+                }
         }
 
         /// <summary>
