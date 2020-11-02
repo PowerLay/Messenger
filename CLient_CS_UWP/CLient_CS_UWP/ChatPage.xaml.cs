@@ -61,23 +61,19 @@ namespace CLient_CS_UWP
 
             var result = await dialog.ShowAsync();
 
-            var nvMain = (NavigationView)Frame.FindName("nvMain");
+            var nvMain = (NavigationView) Frame.FindName("nvMain");
             if (result == ContentDialogResult.Primary) //Если нажата Login
-            {
                 nvMain.SelectedItem = nvMain.MenuItems.OfType<NavigationViewItem>().First();
-            }
             else if (result == ContentDialogResult.Secondary)
-            {
                 nvMain.SelectedItem = nvMain.MenuItems.OfType<NavigationViewItem>().ElementAt(1);
-            }
         }
 
         public async Task<string> GetAsync(string uri)
         {
-            var request = (HttpWebRequest)WebRequest.Create(uri);
+            var request = (HttpWebRequest) WebRequest.Create(uri);
             request.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
 
-            using (var response = (HttpWebResponse)await request.GetResponseAsync())
+            using (var response = (HttpWebResponse) await request.GetResponseAsync())
             using (var stream = response.GetResponseStream())
             using (var reader = new StreamReader(stream))
             {
@@ -139,15 +135,11 @@ namespace CLient_CS_UWP
             var eq = true;
 
             foreach (var onlineUser in OnlineUsers)
-            {
                 if (!onlineUsers.Contains(onlineUser))
                     eq = false;
-            }
             foreach (var onlineUser in onlineUsers)
-            {
                 if (!OnlineUsers.Contains(onlineUser))
                     eq = false;
-            }
 
             if (!eq)
                 for (var i = 0; i < messages.Count; i++)
@@ -170,13 +162,13 @@ namespace CLient_CS_UWP
 
             if (message.Name == ConfigManager.Config.RegData.Username)
                 tempMsg = new Message(HorizontalAlignment.Right, online)
-                { Name = message.Name, Ts = message.Ts, Text = message.Text };
+                    {Name = message.Name, Ts = message.Ts, Text = message.Text};
             else if (string.IsNullOrEmpty(message.Name))
                 tempMsg = new Message(HorizontalAlignment.Center, online)
-                { Name = message.Name, Ts = message.Ts, Text = message.Text };
+                    {Name = message.Name, Ts = message.Ts, Text = message.Text};
             else
                 tempMsg = new Message(HorizontalAlignment.Left, online)
-                { Name = message.Name, Ts = message.Ts, Text = message.Text };
+                    {Name = message.Name, Ts = message.Ts, Text = message.Text};
 
             return tempMsg;
         }
@@ -186,7 +178,7 @@ namespace CLient_CS_UWP
             var msg = MessageBox.Text;
             if (msg == "") return;
             var httpWebRequest =
-                (HttpWebRequest)WebRequest.Create(
+                (HttpWebRequest) WebRequest.Create(
                     $"http://{ConfigManager.Config.IP}:{ConfigManager.Config.Port}/api/Chat");
             httpWebRequest.ContentType = "application/json";
             httpWebRequest.Method = "POST";
@@ -200,7 +192,7 @@ namespace CLient_CS_UWP
         {
             try
             {
-                var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+                var httpResponse = (HttpWebResponse) httpWebRequest.GetResponse();
                 var streamReader = new StreamReader(httpResponse.GetResponseStream());
                 var result = streamReader.ReadToEnd();
                 if (result != "ok") Console.WriteLine("Something went wrong");
@@ -213,7 +205,7 @@ namespace CLient_CS_UWP
 
         private static void SendMessage(string msg, HttpWebRequest httpWebRequest)
         {
-            var json = JsonConvert.SerializeObject(new Message { Text = msg });
+            var json = JsonConvert.SerializeObject(new Message {Text = msg});
             var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream());
             streamWriter.Write(json);
             streamWriter.Close();

@@ -38,8 +38,8 @@
                     Style="{StaticResource TitleTextBlockStyle}"
                     Margin="0,4,0,0"
                     Text="Login" MinWidth="200" />
-                <TextBox Name="LoginBox" PlaceholderText="Nickname" KeyDown="LoginBox_OnKeyDown"/>
-                <PasswordBox Name="PasswordBox" PlaceholderText="Password" KeyDown="PasswordBox_OnKeyDown"/>
+                <TextBox Name="LoginBox" PlaceholderText="Nickname" KeyDown="LoginBox_OnKeyDown" />
+                <PasswordBox Name="PasswordBox" PlaceholderText="Password" KeyDown="PasswordBox_OnKeyDown" />
                 <Button Content="Login" HorizontalAlignment="Center" Click="ButtonBase_OnClick" Margin="5" />
                 <TextBlock Text="" HorizontalAlignment="Center" Name="WarningText" />
             </StackPanel>

@@ -61,7 +61,8 @@
                  AutomationProperties.HelpText="Message" KeyDown="MessageBox_KeyDown" />
         <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch"
                     Margin="0,7,5,7" VerticalAlignment="Stretch" MinHeight="6">
-            <Button x:Name="EmojiButton" Margin="0,0,5,0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinWidth="35"
+            <Button x:Name="EmojiButton" Margin="0,0,5,0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                    MinWidth="35"
                     Content=":)" Click="Button_Click" />
             <Button x:Name="SendButton" Content="Send" HorizontalAlignment="Stretch" Margin="0"
                     VerticalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
