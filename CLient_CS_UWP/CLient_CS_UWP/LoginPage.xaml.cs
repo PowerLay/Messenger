@@ -13,19 +13,24 @@ using Newtonsoft.Json;
 namespace CLient_CS_UWP
 {
     /// <summary>
-    ///     Пустая страница, которую можно использовать саму по себе или для перехода внутри фрейма.
+    ///     Страница авторизации
     /// </summary>
     public sealed partial class LoginPage : Page
     {
+        /// <summary>
+        ///     Инициализация страницы авторизации
+        /// </summary>
         public LoginPage()
         {
             InitializeComponent();
             LoginBox.Text = ConfigManager.Config.RegData.Username;
             PasswordBox.Password = ConfigManager.Config.RegData.Password;
             LoginBox.Focus(FocusState.Programmatic);
-
         }
 
+        /// <summary>
+        ///     Обработка нажатия кнопки авторизации
+        /// </summary>
         private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
         {
             if (LoginBox.Text.Length >= 20 || LoginBox.Text == "" || LoginBox.Text.Contains(" "))
@@ -75,9 +80,13 @@ namespace CLient_CS_UWP
             WarningText.Text = "Success!";
             ConfigManager.WriteConfig();
             var nvMain = (NavigationView) Frame.FindName("nvMain");
-            nvMain.SelectedItem = nvMain.MenuItems.OfType<NavigationViewItem>().Last();
+            if (nvMain != null) nvMain.SelectedItem = nvMain.MenuItems.OfType<NavigationViewItem>().Last();
         }
 
+        /// <summary>
+        ///     Проверка на уникальность ника
+        /// </summary>
+        /// <returns>Если уникален то истина</returns>
         private bool CheckNickUnicall()
         {
             var httpWebRequest =
@@ -91,12 +100,20 @@ namespace CLient_CS_UWP
             return JsonConvert.DeserializeAnonymousType(result, new {response = false}).response;
         }
 
+        /// <summary>
+        ///     Обработка нажатия enter
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void LoginBox_OnKeyDown(object sender, KeyRoutedEventArgs e)
         {
             if (e.Key == VirtualKey.Enter)
                 ButtonBase_OnClick(sender, e);
         }
 
+        /// <summary>
+        ///     Обработка нажатия enter
+        /// </summary>
         private void PasswordBox_OnKeyDown(object sender, KeyRoutedEventArgs e)
         {
             if (e.Key == VirtualKey.Enter)

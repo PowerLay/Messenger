@@ -7,20 +7,37 @@ using Windows.UI.Core;
 
 namespace CLient_CS_UWP
 {
+    /// <summary>
+    ///     Класс запросов на сервер
+    /// </summary>
     internal class ServerResponse
     {
+        /// <summary>
+        ///     Ссылка на страницу сообщений
+        /// </summary>
         private readonly ChatPage _chatPage;
 
+        /// <summary>
+        ///     Конструктор
+        /// </summary>
+        /// <param name="cp">Ссылка на страницу сообщений</param>
         public ServerResponse(ChatPage cp)
         {
             _chatPage = cp;
         }
 
+        /// <summary>
+        ///     Функция вызывающая функцию обновления историй сообщений
+        /// </summary>
+        /// <returns></returns>
         private async Task GetHistory()
         {
             await _chatPage.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { _chatPage.UpdateHistory(); });
         }
 
+        /// <summary>
+        ///     Функция отдельного потока обновления истории сообщений
+        /// </summary>
         public async void ChatUpdater()
         {
             while (true)
@@ -30,7 +47,9 @@ namespace CLient_CS_UWP
             }
         }
 
-
+        /// <summary>
+        ///     Отправка сигнала "в сети"
+        /// </summary>
         private async Task PostOnline()
         {
             try
@@ -51,6 +70,9 @@ namespace CLient_CS_UWP
             }
         }
 
+        /// <summary>
+        ///     Функция потока обновления состояния пользователя
+        /// </summary>
         public async void OnlineUpdater()
         {
             while (true)

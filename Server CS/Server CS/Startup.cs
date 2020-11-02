@@ -17,10 +17,10 @@ namespace Server_CS
         {
             Configuration = configuration;
 
-            var onlineCheckerThread = new Thread(OnlineCheckerCycle) { Name = "OnlineCheckerThread" };
+            var onlineCheckerThread = new Thread(OnlineCheckerCycle) {Name = "OnlineCheckerThread"};
             onlineCheckerThread.Start();
 
-            var saverThread = new Thread(SaverCycle) { Name = "SaverThread" };
+            var saverThread = new Thread(SaverCycle) {Name = "SaverThread"};
             saverThread.Start();
         }
 
@@ -56,7 +56,7 @@ namespace Server_CS
                         {
                             Name = "",
                             Text = $"{user.Key} left",
-                            Ts = (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds
+                            Ts = (int) (DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds
                         });
 
                         Program.OnlineUsersTimeout.Remove(user.Key);
@@ -67,7 +67,7 @@ namespace Server_CS
         }
 
         /// <summary>
-        /// This method gets called by the runtime. Use this method to add services to the container.
+        ///     This method gets called by the runtime. Use this method to add services to the container.
         /// </summary>
         public void ConfigureServices(IServiceCollection services)
         {
@@ -90,7 +90,7 @@ namespace Server_CS
         }
 
         /// <summary>
-        ///  This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        ///     This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         /// </summary>
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {

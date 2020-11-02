@@ -13,16 +13,22 @@ using Newtonsoft.Json;
 namespace CLient_CS_UWP
 {
     /// <summary>
-    ///     Пустая страница, которую можно использовать саму по себе или для перехода внутри фрейма.
+    ///     Страница регистрации
     /// </summary>
     public sealed partial class RegisterPage : Page
     {
+        /// <summary>
+        ///     Инициализация страницы регистрации
+        /// </summary>
         public RegisterPage()
         {
             InitializeComponent();
             LoginBox.Focus(FocusState.Programmatic);
         }
 
+        /// <summary>
+        ///     Обработка нажатия кнопки регистрации
+        /// </summary>
         private void Register_OnClick(object sender, RoutedEventArgs e)
         {
             if (LoginBox.Text.Length >= 20 || LoginBox.Text == "" || LoginBox.Text.Contains(" "))
@@ -80,6 +86,10 @@ namespace CLient_CS_UWP
             nvMain.SelectedItem = nvMain.MenuItems.OfType<NavigationViewItem>().Last();
         }
 
+        /// <summary>
+        ///     Проверка на уникальность ника
+        /// </summary>
+        /// <returns>Если уникален то истина</returns>
         private bool CheckNickUnicall()
         {
             var httpWebRequest =
@@ -93,6 +103,11 @@ namespace CLient_CS_UWP
             return JsonConvert.DeserializeAnonymousType(result, new {response = false}).response;
         }
 
+        /// <summary>
+        ///     Обработка нажатия enter
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Box_OnKeyDown(object sender, KeyRoutedEventArgs e)
         {
             if (e.Key == VirtualKey.Enter)

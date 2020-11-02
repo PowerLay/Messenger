@@ -21,6 +21,7 @@ namespace Server_CS.Controllers
         {
             return Program.OnlineUsers;
         }
+
         /// <summary>
         ///     Получения сигнала онлайн пользователя
         ///     <br>POST: api/Online</br>
