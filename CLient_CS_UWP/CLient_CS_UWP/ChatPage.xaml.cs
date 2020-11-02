@@ -139,7 +139,7 @@ namespace CLient_CS_UWP
             var eq = true;
 
             foreach (var (key, value) in onlineUsers)
-                if (value != OnlineUsers[key])
+                if (OnlineUsers.ContainsKey(key) && value != OnlineUsers[key])
                     eq = false;
 
             if (!eq)
@@ -191,10 +191,17 @@ namespace CLient_CS_UWP
 
         private void GetAnswer(HttpWebRequest httpWebRequest)
         {
-            var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
-            var streamReader = new StreamReader(httpResponse.GetResponseStream());
-            var result = streamReader.ReadToEnd();
-            if (result != "ok") Console.WriteLine("Something went wrong");
+            try
+            {
+                var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+                var streamReader = new StreamReader(httpResponse.GetResponseStream());
+                var result = streamReader.ReadToEnd();
+                if (result != "ok") Console.WriteLine("Something went wrong");
+            }
+            catch (WebException)
+            {
+                //ignored
+            }
         }
 
         private static void SendMessage(string msg, HttpWebRequest httpWebRequest)
