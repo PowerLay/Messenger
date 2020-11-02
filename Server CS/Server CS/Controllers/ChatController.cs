@@ -37,7 +37,6 @@ namespace Server_CS.Controllers
             var msg = new Message {Name = User.Identity.Name, Text = value.Text, Ts = value.Ts};
             Console.WriteLine(msg);
             Program.Messages.Add(msg);
-            JsonWorker.Save(Program.Messages);
             return "ok";
         }
     }

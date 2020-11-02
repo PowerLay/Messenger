@@ -39,7 +39,7 @@ namespace Server_CS.Controllers
         [HttpGet]
         public IActionResult Get(string username)
         {
-            return Ok(new {response = Program.RegDatas.Find(regData => regData.Username == username) != default});
+            return Ok(new { response = Program.RegDatas.Find(regData => regData.Username == username) != default });
         }
 
         /// <summary>
@@ -57,10 +57,8 @@ namespace Server_CS.Controllers
             if (user == null) return response;
             if (string.IsNullOrEmpty(user.Username)) return response;
 
-            JsonWorker.Save(Program.RegDatas);
-
             var tokenString = GenerateJSONWebToken(user);
-            response = Ok(new {token = tokenString});
+            response = Ok(new { token = tokenString });
 
             return response;
         }

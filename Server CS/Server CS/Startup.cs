@@ -17,11 +17,29 @@ namespace Server_CS
         {
             Configuration = configuration;
 
-            var onlineCheckerThread = new Thread(OnlineCheckerCycle) {Name = "OnlineCheckerThread"};
+            var onlineCheckerThread = new Thread(OnlineCheckerCycle) { Name = "OnlineCheckerThread" };
             onlineCheckerThread.Start();
+
+            var saverThread = new Thread(SaverCycle) { Name = "SaverThread" };
+            saverThread.Start();
         }
 
         public IConfiguration Configuration { get; }
+
+        /// <summary>
+        ///     Проверка пользователей в сети
+        /// </summary>
+        public static void SaverCycle()
+        {
+            while (true)
+            {
+                JsonWorker.Save(Program.Messages);
+                JsonWorker.Save(Program.RegDatas);
+
+                Thread.Sleep(10000);
+            }
+        }
+
 
         /// <summary>
         ///     Проверка пользователей в сети
@@ -38,9 +56,8 @@ namespace Server_CS
                         {
                             Name = "",
                             Text = $"{user.Key} left",
-                            Ts = (int) (DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds
+                            Ts = (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds
                         });
-                        JsonWorker.Save(Program.Messages);
 
                         Program.OnlineUsersTimeout.Remove(user.Key);
                     }

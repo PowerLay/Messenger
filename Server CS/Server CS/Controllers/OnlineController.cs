@@ -42,7 +42,6 @@ namespace Server_CS.Controllers
                         Text = $"{name} connected",
                         Ts = (int) (DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds
                     });
-                    JsonWorker.Save(Program.Messages);
                     Program.OnlineUsers[name] = true;
                 }
 
@@ -59,7 +58,6 @@ namespace Server_CS.Controllers
                     Text = $"{name} connected",
                     Ts = (int) (DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds
                 });
-                JsonWorker.Save(Program.Messages);
             }
 
             return "ok";
