@@ -17,7 +17,7 @@ namespace Server_CS.Controllers
         /// </summary>
         /// <returns>Словарь пользователей (В сети/Не в сети)</returns>
         [HttpGet]
-        public Dictionary<string, bool> Get()
+        public List<string> Get()
         {
             return Program.OnlineUsers;
         }
@@ -32,24 +32,13 @@ namespace Server_CS.Controllers
         {
             var name = User.Identity.Name;
             if (name == null) return "No name";
-            if (Program.OnlineUsers.ContainsKey(name))
+            if (Program.OnlineUsers.Contains(name))
             {
-                if (!Program.OnlineUsers[name])
-                {
-                    Program.Messages.Add(new Message
-                    {
-                        Name = "",
-                        Text = $"{name} connected",
-                        Ts = (int) (DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds
-                    });
-                    Program.OnlineUsers[name] = true;
-                }
-
                 Program.OnlineUsersTimeout[name] = DateTime.Now;
             }
             else
             {
-                Program.OnlineUsers.Add(name, true);
+                Program.OnlineUsers.Add(name);
                 Program.OnlineUsersTimeout.Add(name, DateTime.Now);
 
                 Program.Messages.Add(new Message

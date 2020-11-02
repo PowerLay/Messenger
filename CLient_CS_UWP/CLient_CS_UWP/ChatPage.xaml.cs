@@ -23,7 +23,7 @@ namespace CLient_CS_UWP
     {
         private static string prevRes = "";
 
-        private Dictionary<string, bool> OnlineUsers = new Dictionary<string, bool>();
+        private List<string> OnlineUsers = new List<string>();
 
         public ChatPage()
         {
@@ -105,15 +105,15 @@ namespace CLient_CS_UWP
             if (MessagesListView.Items == null) return;
 
             var messages = JsonConvert.DeserializeObject<List<Message>>(res);
-            var onlineUsers = JsonConvert.DeserializeObject<Dictionary<string, bool>>(onlineStatus);
+            var onlineUsers = JsonConvert.DeserializeObject<List<string>>(onlineStatus);
             if (MessagesListView.Items?.Count == 0)
             {
                 foreach (var message in messages)
                 {
                     bool online;
                     if (string.IsNullOrEmpty(message.Name)) online = false;
-                    else if (!onlineUsers.ContainsKey(message.Name)) online = false;
-                    else online = onlineUsers[message.Name];
+                    else if (!onlineUsers.Contains(message.Name)) online = false;
+                    else online = true;
 
                     MessagesListView.Items.Add(GetTrueMessage(message, online));
                 }
@@ -128,8 +128,8 @@ namespace CLient_CS_UWP
                 {
                     bool online;
                     if (string.IsNullOrEmpty(messages[i].Name)) online = false;
-                    else if (!onlineUsers.ContainsKey(messages[i].Name)) online = false;
-                    else online = onlineUsers[messages[i].Name];
+                    else if (!onlineUsers.Contains(messages[i].Name)) online = false;
+                    else online = true;
 
                     MessagesListView.Items?.Add(GetTrueMessage(messages[i], online));
                 }
@@ -138,9 +138,16 @@ namespace CLient_CS_UWP
 
             var eq = true;
 
-            foreach (var (key, value) in onlineUsers)
-                if (OnlineUsers.ContainsKey(key) && value != OnlineUsers[key])
+            foreach (var onlineUser in OnlineUsers)
+            {
+                if (!onlineUsers.Contains(onlineUser))
                     eq = false;
+            }
+            foreach (var onlineUser in onlineUsers)
+            {
+                if (!OnlineUsers.Contains(onlineUser))
+                    eq = false;
+            }
 
             if (!eq)
                 for (var i = 0; i < messages.Count; i++)
@@ -148,8 +155,8 @@ namespace CLient_CS_UWP
                     var message = messages[i];
                     bool online;
                     if (string.IsNullOrEmpty(message.Name)) online = false;
-                    else if (!onlineUsers.ContainsKey(message.Name)) online = false;
-                    else online = onlineUsers[message.Name];
+                    else if (!onlineUsers.Contains(message.Name)) online = false;
+                    else online = true;
 
                     MessagesListView.Items[i] = GetTrueMessage(message, online);
                 }

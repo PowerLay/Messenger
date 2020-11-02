@@ -51,7 +51,7 @@ namespace Server_CS
                 foreach (var user in Program.OnlineUsersTimeout)
                     if (user.Value.AddSeconds(5) < DateTime.Now)
                     {
-                        Program.OnlineUsers[user.Key] = false;
+                        Program.OnlineUsers.Remove(user.Key);
                         Program.Messages.Add(new Message
                         {
                             Name = "",

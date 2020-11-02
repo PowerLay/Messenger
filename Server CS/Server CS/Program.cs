@@ -20,7 +20,7 @@ namespace Server_CS
         /// <summary>
         ///     Словарь Пользователей (В сети/Не в сети)
         /// </summary>
-        public static Dictionary<string, bool> OnlineUsers = new Dictionary<string, bool>();
+        public static List<string> OnlineUsers = new List<string>();
 
         /// <summary>
         ///     Словарь пользователей и времени последнего сигнала онлайн
