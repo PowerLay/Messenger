@@ -7,16 +7,22 @@ using Windows.UI.Xaml.Controls;
 namespace CLient_CS_UWP
 {
     /// <summary>
-    ///     Пустая страница, которую можно использовать саму по себе или для перехода внутри фрейма.
+    ///     Главная страница содержащая навигационную панель и её логику
     /// </summary>
     public sealed partial class MainPage : Page
     {
+        /// <summary>
+        ///     Инициализация страницы
+        /// </summary>
         public MainPage()
         {
             InitializeComponent();
             Load();
         }
 
+        /// <summary>
+        ///     Загрузка настроек и выбор первой панели на навигационной панели
+        /// </summary>
         private async void Load()
         {
             await ConfigManager.LoadConfig();
@@ -25,6 +31,11 @@ namespace CLient_CS_UWP
             ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
         }
 
+        /// <summary>
+        ///     Обработчик события изменения текущей страницы
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args">Навигационная панель</param>
         private void NavigationView_SelectionChanged(NavigationView sender,
             NavigationViewSelectionChangedEventArgs args)
         {

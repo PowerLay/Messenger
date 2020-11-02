@@ -19,7 +19,7 @@
                                HorizontalAlignment="Center"
                                Width="32"
                                DisplayName="{Binding Name}"
-                               Visibility="{x:Bind Visibility}" />
+                               Visibility="{x:Bind PersonPictureVisibility}" />
                 <Grid Grid.Column="1" Margin="4" MaxWidth="700" MinWidth="50"
                       Padding="10, 0, 0, 10" Background="{x:Bind BgColor}" CornerRadius="4">
                     <Grid.RowDefinitions>

@@ -17,14 +17,23 @@ using Newtonsoft.Json;
 namespace CLient_CS_UWP
 {
     /// <summary>
-    ///     Пустая страница, которую можно использовать саму по себе или для перехода внутри фрейма.
+    ///     Страница чата и его логики
     /// </summary>
     public sealed partial class ChatPage : Page
     {
-        private static string prevRes = "";
+        /// <summary>
+        ///     Предыдущая строчка которую вернул сервер на запрос GET api/Chat
+        /// </summary>
+        private static string _prevMessagesString = "";
 
-        private List<string> OnlineUsers = new List<string>();
+        /// <summary>
+        ///     Массив пользователей которые онлайн
+        /// </summary>
+        private List<string> _onlineUsers = new List<string>();
 
+        /// <summary>
+        ///     Инициализация страницы чата
+        /// </summary>
         public ChatPage()
         {
             InitializeComponent();
@@ -34,7 +43,6 @@ namespace CLient_CS_UWP
 
             var onlineUpdaterThread = new Thread(sr.OnlineUpdater);
             onlineUpdaterThread.Start();
-
 
             if (string.IsNullOrEmpty(ConfigManager.Config.Token))
             {
@@ -49,6 +57,10 @@ namespace CLient_CS_UWP
             }
         }
 
+        /// <summary>
+        ///     Вызов диалогового окна и обработка нажатий
+        ///     <br>Вызывается если нету токена в настройках</br>
+        /// </summary>
         private async void AskLogin()
         {
             var dialog = new ContentDialog
@@ -62,12 +74,32 @@ namespace CLient_CS_UWP
             var result = await dialog.ShowAsync();
 
             var nvMain = (NavigationView) Frame.FindName("nvMain");
-            if (result == ContentDialogResult.Primary) //Если нажата Login
-                nvMain.SelectedItem = nvMain.MenuItems.OfType<NavigationViewItem>().First();
-            else if (result == ContentDialogResult.Secondary)
-                nvMain.SelectedItem = nvMain.MenuItems.OfType<NavigationViewItem>().ElementAt(1);
+            switch (result)
+            {
+                //Если нажата Login
+                case ContentDialogResult.Primary:
+                {
+                    if (nvMain != null) nvMain.SelectedItem = nvMain.MenuItems.OfType<NavigationViewItem>().First();
+                    break;
+                }
+                case ContentDialogResult.Secondary:
+                {
+                    if (nvMain != null)
+                        nvMain.SelectedItem = nvMain.MenuItems.OfType<NavigationViewItem>().ElementAt(1);
+                    break;
+                }
+                case ContentDialogResult.None:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
 
+        /// <summary>
+        ///     GET запрос на сервер
+        /// </summary>
+        /// <param name="uri">http ссылка на api</param>
+        /// <returns>Строка которую вернул сервер</returns>
         public async Task<string> GetAsync(string uri)
         {
             var request = (HttpWebRequest) WebRequest.Create(uri);
@@ -81,6 +113,9 @@ namespace CLient_CS_UWP
             }
         }
 
+        /// <summary>
+        ///     Обновление истории сообщений и онлайна с сервера
+        /// </summary>
         public async void UpdateHistory()
         {
             string res;
@@ -96,7 +131,7 @@ namespace CLient_CS_UWP
                 return;
             }
 
-            if (res == "[]" && res == prevRes) return;
+            if (res == "[]" && res == _prevMessagesString) return;
             if (onlineStatus == "[]") return;
             if (MessagesListView.Items == null) return;
 
@@ -114,8 +149,8 @@ namespace CLient_CS_UWP
                     MessagesListView.Items.Add(GetTrueMessage(message, online));
                 }
 
-                OnlineUsers = onlineUsers;
-                prevRes = res;
+                _onlineUsers = onlineUsers;
+                _prevMessagesString = res;
                 return;
             }
 
@@ -130,15 +165,15 @@ namespace CLient_CS_UWP
                     MessagesListView.Items?.Add(GetTrueMessage(messages[i], online));
                 }
 
-            prevRes = res;
+            _prevMessagesString = res;
 
             var eq = true;
 
-            foreach (var onlineUser in OnlineUsers)
+            foreach (var onlineUser in _onlineUsers)
                 if (!onlineUsers.Contains(onlineUser))
                     eq = false;
             foreach (var onlineUser in onlineUsers)
-                if (!OnlineUsers.Contains(onlineUser))
+                if (!_onlineUsers.Contains(onlineUser))
                     eq = false;
 
             if (!eq)
@@ -153,9 +188,15 @@ namespace CLient_CS_UWP
                     MessagesListView.Items[i] = GetTrueMessage(message, online);
                 }
 
-            OnlineUsers = onlineUsers;
+            _onlineUsers = onlineUsers;
         }
 
+        /// <summary>
+        ///     Преобразует сообщение полученное от сервера в сообщение с конфигурацией для GUI
+        /// </summary>
+        /// <param name="message">Сообщение полученное от сервера</param>
+        /// <param name="online">Состояние пользователя (В сети/не в сети)</param>
+        /// <returns>сообщение с конфигурацией для GUI</returns>
         private static Message GetTrueMessage(Message message, bool online)
         {
             Message tempMsg;
@@ -188,6 +229,10 @@ namespace CLient_CS_UWP
             GetAnswer(httpWebRequest);
         }
 
+        /// <summary>
+        ///     Получение ответа от сервера
+        /// </summary>
+        /// <param name="httpWebRequest">Запрос к серверу</param>
         private void GetAnswer(HttpWebRequest httpWebRequest)
         {
             try
@@ -203,6 +248,11 @@ namespace CLient_CS_UWP
             }
         }
 
+        /// <summary>
+        ///     Отправка сообщения
+        /// </summary>
+        /// <param name="msg">Сообщение</param>
+        /// <param name="httpWebRequest">Запрос к серверу</param>
         private static void SendMessage(string msg, HttpWebRequest httpWebRequest)
         {
             var json = JsonConvert.SerializeObject(new Message {Text = msg});
@@ -211,6 +261,11 @@ namespace CLient_CS_UWP
             streamWriter.Close();
         }
 
+        /// <summary>
+        ///     Событие нажатия клавиши
+        ///     <br>ожидает нажатие enter для отправки сообщения</br>
+        /// </summary>
+        /// <param name="e">Нажатая клавиша</param>
         private void MessageBox_KeyDown(object sender, KeyRoutedEventArgs e)
         {
             if (e.Key == VirtualKey.Enter)
@@ -220,12 +275,18 @@ namespace CLient_CS_UWP
             }
         }
 
+        /// <summary>
+        ///     Обработка нажатия на кнопку отправить
+        /// </summary>
         private void SendButton_Click(object sender, RoutedEventArgs e)
         {
             Post();
             MessageBox.Text = "";
         }
 
+        /// <summary>
+        ///     Обработка нажатия на кнопку эмоджи
+        /// </summary>
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             MessageBox.Focus(FocusState.Programmatic);
