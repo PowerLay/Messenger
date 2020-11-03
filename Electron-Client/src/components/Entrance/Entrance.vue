@@ -6,19 +6,18 @@
   </v-container>
 </template>
 
-<script lang="ts">
+<script>
 import Vue from "vue";
-import EntranceCard from "./EntranceCard.vue";
 import LRForm from "./LoginRegisterForm.vue";
 
 export default Vue.extend({
   name: "Entrance",
   components: {
-    LRForm//EntranceCard
+    LRForm
   },
   data: () => ({}),
   methods:{
-    changeView(a: string){
+    changeView(a){
       this.$emit("changeView", a);
     }
   }

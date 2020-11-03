@@ -15,14 +15,14 @@ protocol.registerSchemesAsPrivileged([
   { scheme: "app", privileges: { secure: true, standard: true } }
 ]);
  
-const iconPath = path.join(__dirname, "../src/assets/", "favicon.ico");
+//const iconPath = path.join(__dirname, "../src/assets/icons/", "icon.png");
 
 function createWindow() {
   // Create the browser window.
   win = new BrowserWindow({
     width: 800,
     height: 600,
-    icon: iconPath,
+    //icon: iconPath,
     webPreferences: {
       webSecurity: false,
       // Use pluginOptions.nodeIntegration, leave this alone
