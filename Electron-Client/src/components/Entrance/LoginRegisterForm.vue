@@ -167,6 +167,7 @@ export default {
           hasError = false;
         },
         function(e) {
+          t.loading = false;
           null;
         }
       );

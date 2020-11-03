@@ -92,7 +92,7 @@ export default {
     },
     sendMessage(e) {
       e.preventDefault();
-
+      this.hideEmojiDialog();
       if (!this.message) {
         return false;
       }
