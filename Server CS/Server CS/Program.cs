@@ -42,8 +42,7 @@ namespace Server_CS
             if (args.Length > 0)
             {
                 IP = args[0];
-                port = args[1];
-                Url = $"http://{IP}:{port}";
+                port = args[1];/{IP}:{port}";
             }
             else
             {
