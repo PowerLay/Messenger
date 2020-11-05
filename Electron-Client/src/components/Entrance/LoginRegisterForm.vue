@@ -156,7 +156,7 @@ export default {
       let result = false;
       let hasError = true;
       await this.request(
-        "http://127.0.0.1:5000/api/Login?username=" + username,
+        `http://${this.HOST}:${this.PORT}/api/Login?username=${username}`,
         "GET",
         {},
         null,
@@ -188,7 +188,7 @@ export default {
         Password: pass
       };
       this.request(
-        "http://127.0.0.1:5000/api/Login",
+        `http://${this.HOST}:${this.PORT}/api/Login`,
         "POST",
         {
           "Content-Type": "application/json;charset=utf-8"
@@ -291,6 +291,8 @@ export default {
     this.globalThis = this; // trick to bypass eslynt shit
     this.rvalid = false;
     this.lvalid = false;
+    this.HOST = this.settings.server.host;
+    this.PORT = this.settings.server.port;
   },
   data: () => ({
     dialog: true,
@@ -320,7 +322,9 @@ export default {
       required: value => !!value || "Required.",
       min: v => (v && v.length >= 8) || "Min 8 characters",
       spc: v => v.replace(/\s/gi, "") == v || "Must not contain spaces"
-    }
+    },
+    HOST:null,
+    PORT:null,
   })
 };
 </script>
