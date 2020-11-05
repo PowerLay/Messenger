@@ -43,6 +43,7 @@ namespace Server_CS
             {
                 IP = args[0];
                 port = args[1];
+                Url = $"http://{IP}:{port}";
             }
             else
             {
