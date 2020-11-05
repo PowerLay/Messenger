@@ -36,15 +36,27 @@ namespace Server_CS
         public static void Main(string[] args)
         {
             JsonWorker.Load();
+            string IP;
+            string port;
 
-            Console.Write("Enter IP(or press enter or default):");
-            var IP = Console.ReadLine();
-            if (!string.IsNullOrEmpty(IP))
+            if (args.Length > 0)
             {
-                Console.Write("Enter port:");
-                var port = Console.ReadLine();
+                IP = args[0];
+                port = args[1];
                 Url = $"http://{IP}:{port}";
             }
+            else
+            {
+                Console.Write("Enter IP(or press enter or default):");
+                IP = Console.ReadLine();
+                if (!string.IsNullOrEmpty(IP))
+                {
+                    Console.Write("Enter port:");
+                    port = Console.ReadLine();
+                    Url = $"http://{IP}:{port}";
+                }
+            }
+
             CreateHostBuilder(args).Build().Run();
         }
 
