@@ -58,6 +58,16 @@ namespace Client_CS_CLI
         ///     Токен необходимый для отправки сообщений
         /// </summary>
         public string Token { get; set; }
+
+        /// <summary>
+        ///     Адрес сервера
+        /// </summary>
+        public string IP { get; set; } = "localhost";
+
+        /// <summary>
+        ///     Порт сервера
+        /// </summary>
+        public int Port { get; set; } = 5000;
     }
 
     /// <summary>
