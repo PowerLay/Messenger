@@ -57,19 +57,19 @@
             <RowDefinition Height="933*" />
             <RowDefinition Height="45" />
         </Grid.RowDefinitions>
-        <TextBox x:Name="MessageBox" PlaceholderText="Message" TextWrapping="Wrap" Grid.Row="1" Margin="5,7,5,7"
+        <TextBox BorderThickness="3" BorderBrush="{ThemeResource SystemControlBackgroundListMediumRevealBorderBrush}" x:Name="MessageBox" PlaceholderText="Message" TextWrapping="Wrap" Grid.Row="1" Margin="5,7,5,7"
                  AutomationProperties.HelpText="Message" KeyDown="MessageBox_KeyDown" />
-        <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch"
+        <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" 
                     Margin="0,7,5,7" VerticalAlignment="Stretch" MinHeight="6">
-            <Button x:Name="EmojiButton" Margin="0,0,5,0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+            <Button Style="{StaticResource ButtonRevealStyle}" x:Name="EmojiButton" Margin="0,0,5,0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                     MinWidth="35"
                     Content=":)" Click="Button_Click" />
-            <Button x:Name="SendButton" Content="Send" HorizontalAlignment="Stretch" Margin="0"
+            <Button Style="{StaticResource ButtonRevealStyle}" x:Name="SendButton" Content="Send" HorizontalAlignment="Stretch" Margin="0"
                     VerticalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
                     MinWidth="70" MinHeight="6" Click="SendButton_Click" />
         </StackPanel>
 
-        <ListView Name="MessagesListView" Grid.Row="0" Grid.ColumnSpan="2" ItemTemplate="{StaticResource MessageView}">
+        <ListView BorderThickness="3" BorderBrush="{ThemeResource SystemControlBackgroundListMediumRevealBorderBrush}" Name="MessagesListView" Grid.Row="0" Grid.ColumnSpan="2" ItemTemplate="{StaticResource MessageView}">
             <ListView.ItemsPanel>
                 <ItemsPanelTemplate>
                     <ItemsStackPanel ItemsUpdatingScrollMode="KeepLastItemInView"
@@ -79,7 +79,7 @@
 
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
-                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                 </Style>
             </ListView.ItemContainerStyle>
         </ListView>
