@@ -8,14 +8,14 @@
 
   <Identity
     Name="bd3429fe-e960-4339-b489-5e58afe9e10a"
-    Publisher="CN=1854p"
+    Publisher="CN=NoNameCompany"
     Version="1.0.0.0" />
 
   <mp:PhoneIdentity PhoneProductId="bd3429fe-e960-4339-b489-5e58afe9e10a" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
     <DisplayName>CLient_CS_UWP</DisplayName>
-    <PublisherDisplayName>1854p</PublisherDisplayName>
+    <PublisherDisplayName>NoNameCompany</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
 
@@ -36,9 +36,12 @@
         Square150x150Logo="Assets\Square150x150Logo.png"
         Square44x44Logo="Assets\Square44x44Logo.png"
         Description="CLient_CS_UWP"
-        BackgroundColor="transparent">
-        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png"/>
-        <uap:SplashScreen Image="Assets\SplashScreen.png" />
+        BackgroundColor="black">
+        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png" Square71x71Logo="Assets\SmallTile.png" Square310x310Logo="Assets\LargeTile.png"/>
+        <uap:SplashScreen Image="Assets\SplashScreen.png"  BackgroundColor="black"/>
+        <uap:LockScreen BadgeLogo="Assets\BadgeLogo.png" Notification="badge"/>
+        <uap:InitialRotationPreference>
+          <uap:Rotation Preference="landscape"/></uap:InitialRotationPreference>
       </uap:VisualElements>
     </Application>
   </Applications>
