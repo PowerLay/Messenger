@@ -29,7 +29,7 @@ namespace CLient_CS_UWP
         /// <summary>
         ///     Обработка нажатия кнопки регистрации
         /// </summary>
-        private void Register_OnClick(object sender, RoutedEventArgs e)
+        private async void Register_OnClick(object sender, RoutedEventArgs e)
         {
             if (LoginBox.Text.Length >= 20 || LoginBox.Text == "" || LoginBox.Text.Contains(" "))
             {

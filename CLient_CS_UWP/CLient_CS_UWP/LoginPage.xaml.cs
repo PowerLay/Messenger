@@ -31,7 +31,7 @@ namespace CLient_CS_UWP
         /// <summary>
         ///     Обработка нажатия кнопки авторизации
         /// </summary>
-        private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
+        private async void ButtonBase_OnClick(object sender, RoutedEventArgs e)
         {
             if (LoginBox.Text.Length >= 20 || LoginBox.Text == "" || LoginBox.Text.Contains(" "))
             {
