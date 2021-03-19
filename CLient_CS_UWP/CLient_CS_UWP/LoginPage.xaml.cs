@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -39,9 +40,8 @@ namespace CLient_CS_UWP
                 return;
             }
 
-            if (!CheckNickUnicall())
+            if (!(await CheckNickUnicall()))
             {
-                WarningText.Text = "User with this nickname does not exist";
                 return;
             }
 
@@ -87,7 +87,7 @@ namespace CLient_CS_UWP
         ///     Проверка на уникальность ника
         /// </summary>
         /// <returns>Если уникален то истина</returns>
-        private bool CheckNickUnicall()
+        private async Task<bool>  CheckNickUnicall()
         {
             var httpWebRequest =
                 (HttpWebRequest) WebRequest.Create(
@@ -96,13 +96,22 @@ namespace CLient_CS_UWP
             httpWebRequest.Method = "GET";
             try
             {
-                var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+                WarningText.Text = "Connecting...";
+                var httpResponse = (HttpWebResponse)await httpWebRequest.GetResponseAsync();
                 var streamReader = new StreamReader(httpResponse.GetResponseStream());
                 var result = streamReader.ReadToEnd();
-                return JsonConvert.DeserializeAnonymousType(result, new { response = false }).response;
+                WarningText.Text = "Done!";
+
+                var checkNickUnicall = JsonConvert.DeserializeAnonymousType(result, new { response = false }).response;
+                if(!checkNickUnicall)
+                    WarningText.Text = "User with this nickname does not exist";
+
+                return checkNickUnicall;
             }
             catch
             {
+                WarningText.Text = "The server is not responding!";
+
                 ShowMessage();
                 return false;
             }
