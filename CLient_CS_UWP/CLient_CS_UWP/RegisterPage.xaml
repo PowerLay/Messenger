@@ -42,8 +42,11 @@
                 <TextBox Margin="0,10,0,0" BorderThickness="3" BorderBrush="{ThemeResource SystemControlBackgroundListMediumRevealBorderBrush}" Name="LoginBox" PlaceholderText="Nickname" KeyDown="Box_OnKeyDown" />
                 <PasswordBox Margin="0,10,0,0" BorderThickness="3" BorderBrush="{ThemeResource SystemControlBackgroundListMediumRevealBorderBrush}" Name="PasswordBox1" PlaceholderText="Password" KeyDown="Box_OnKeyDown" />
                 <PasswordBox Margin="0,10,0,0" BorderThickness="3" BorderBrush="{ThemeResource SystemControlBackgroundListMediumRevealBorderBrush}" Name="PasswordBox2" PlaceholderText="Repeat password" KeyDown="Box_OnKeyDown" />
-                <Button Margin="0,10,0,0" Style="{StaticResource ButtonRevealStyle}" Content="Register" HorizontalAlignment="Center" Click="Register_OnClick" />
-                <TextBlock Margin="0,10,0,0" Text="" HorizontalAlignment="Center" Name="WarningText" />
+                <Button Margin="0,10,0,0" Style="{StaticResource ButtonRevealStyle}" Content="Register" x:Name="RegisterButton" HorizontalAlignment="Center" Click="Register_OnClick" />
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="30,10,0,0">
+                    <TextBlock Text="" HorizontalAlignment="Left" Name="WarningText"/>
+                    <ProgressRing IsActive="False" x:Name="LoadBar" Height="20" Width="20" HorizontalAlignment="Right" Margin="10,0,0,0"/>
+                </StackPanel>
             </StackPanel>
         </ScrollViewer>
     </Grid>

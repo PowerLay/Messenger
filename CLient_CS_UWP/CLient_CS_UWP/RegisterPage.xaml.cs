@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -31,21 +32,25 @@ namespace CLient_CS_UWP
         /// </summary>
         private async void Register_OnClick(object sender, RoutedEventArgs e)
         {
+            RegisterButton.IsEnabled = false;
             if (LoginBox.Text.Length >= 20 || LoginBox.Text == "" || LoginBox.Text.Contains(" "))
             {
                 WarningText.Text = "Invalid nickname format";
+                RegisterButton.IsEnabled = true;
                 return;
             }
 
-            if (CheckNickUnicall())
+            if (await CheckNickUnicall())
             {
                 WarningText.Text = "Nickname is busy";
+                RegisterButton.IsEnabled = true;
                 return;
             }
 
             if (PasswordBox1.Password != PasswordBox2.Password)
             {
                 WarningText.Text = "Passwords do not match";
+                RegisterButton.IsEnabled = true;
                 return;
             }
 
@@ -72,6 +77,7 @@ namespace CLient_CS_UWP
             catch (Exception)
             {
                 WarningText.Text = "Unauthorized";
+                RegisterButton.IsEnabled = true;
                 return;
             }
 
@@ -81,6 +87,7 @@ namespace CLient_CS_UWP
 
             ConfigManager.Config.RegData = regData;
             WarningText.Text = "Success!";
+            RegisterButton.IsEnabled = true;
             ConfigManager.WriteConfig();
             var nvMain = (NavigationView) Frame.FindName("nvMain");
             nvMain.SelectedItem = nvMain.MenuItems.OfType<NavigationViewItem>().Last();
@@ -90,7 +97,7 @@ namespace CLient_CS_UWP
         ///     Проверка на уникальность ника
         /// </summary>
         /// <returns>Если уникален то истина</returns>
-        private bool CheckNickUnicall()
+        private async Task<bool> CheckNickUnicall()
         {
             var httpWebRequest =
                 (HttpWebRequest) WebRequest.Create(
@@ -99,13 +106,19 @@ namespace CLient_CS_UWP
             httpWebRequest.Method = "GET";
             try
             {
-                var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+                WarningText.Text = "Connecting...";
+                LoadBar.IsActive = true;
+                var httpResponse = (HttpWebResponse)await httpWebRequest.GetResponseAsync();
                 var streamReader = new StreamReader(httpResponse.GetResponseStream());
                 var result = streamReader.ReadToEnd();
+                LoadBar.IsActive = false;
+                WarningText.Text = "Done!";
+
                 return JsonConvert.DeserializeAnonymousType(result, new { response = false }).response;
             }
             catch
             {
+                LoadBar.IsActive = false;
                 ShowMessage();
                 return false;
             }
