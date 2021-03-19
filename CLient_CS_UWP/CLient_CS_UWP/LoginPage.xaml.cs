@@ -111,7 +111,6 @@ namespace CLient_CS_UWP
             catch
             {
                 WarningText.Text = "The server is not responding!";
-
                 ShowMessage();
                 return false;
             }
