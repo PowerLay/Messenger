@@ -15,6 +15,20 @@ namespace Client_CS_CLI
         {
             ConfigManager.LoadConfig();
 
+            string IP;
+            string port;
+            Console.Write("Enter IP(or press enter or default):");
+            IP = Console.ReadLine();
+            if (!string.IsNullOrEmpty(IP))
+            {
+                Console.Write("Enter port:");
+                port = Console.ReadLine();
+                ConfigManager.Config.IP = IP;
+                if (int.TryParse(port, out var configPort))
+                    ConfigManager.Config.Port = configPort;
+                else
+                    Console.WriteLine($"Wrong port. Use {configPort}");
+            }
             Login();
 
             var onlineUpdaterThread = new Thread(ServerResponse.OnlineUpdater) {Name = "OnlineUpdaterThread"};
@@ -41,7 +55,7 @@ namespace Client_CS_CLI
         {
             do
             {
-                var httpWebRequest = (HttpWebRequest) WebRequest.Create("http://localhost:5000/api/Login");
+                var httpWebRequest = (HttpWebRequest) WebRequest.Create($"http://{ConfigManager.Config.IP}:{ConfigManager.Config.Port}/api/Login");
                 httpWebRequest.ContentType = "application/json";
                 httpWebRequest.Method = "POST";
 
@@ -110,7 +124,7 @@ namespace Client_CS_CLI
                 return;
             }
 
-            var httpWebRequest = (HttpWebRequest) WebRequest.Create("http://localhost:5000/api/Chat");
+            var httpWebRequest = (HttpWebRequest) WebRequest.Create($"http://{ConfigManager.Config.IP}:{ConfigManager.Config.Port}/api/Chat");
             httpWebRequest.ContentType = "application/json";
             httpWebRequest.Method = "POST";
             httpWebRequest.Headers.Add("Authorization", "Bearer " + ConfigManager.Config.Token);

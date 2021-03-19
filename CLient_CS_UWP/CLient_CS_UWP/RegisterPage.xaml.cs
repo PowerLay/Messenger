@@ -29,7 +29,7 @@ namespace CLient_CS_UWP
         /// <summary>
         ///     Обработка нажатия кнопки регистрации
         /// </summary>
-        private void Register_OnClick(object sender, RoutedEventArgs e)
+        private async void Register_OnClick(object sender, RoutedEventArgs e)
         {
             if (LoginBox.Text.Length >= 20 || LoginBox.Text == "" || LoginBox.Text.Contains(" "))
             {
@@ -97,12 +97,32 @@ namespace CLient_CS_UWP
                     $"http://{ConfigManager.Config.IP}:{ConfigManager.Config.Port}/api/Login?username={LoginBox.Text}");
             httpWebRequest.ContentType = "application/json";
             httpWebRequest.Method = "GET";
-            var httpResponse = (HttpWebResponse) httpWebRequest.GetResponse();
-            var streamReader = new StreamReader(httpResponse.GetResponseStream());
-            var result = streamReader.ReadToEnd();
-            return JsonConvert.DeserializeAnonymousType(result, new {response = false}).response;
+            try
+            {
+                var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+                var streamReader = new StreamReader(httpResponse.GetResponseStream());
+                var result = streamReader.ReadToEnd();
+                return JsonConvert.DeserializeAnonymousType(result, new { response = false }).response;
+            }
+            catch
+            {
+                ShowMessage();
+                return false;
+            }
         }
+        private async void ShowMessage()
+        {
+            var deleteFileDialog = new ContentDialog
+            {
+                Title = "Error",
+                Content = "The server is not responding!",
+                PrimaryButtonText = "Close"
+            };
 
+            var result = await deleteFileDialog.ShowAsync();
+
+            if (result != ContentDialogResult.Primary) return;
+        }
         /// <summary>
         ///     Обработка нажатия enter
         /// </summary>

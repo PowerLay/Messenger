@@ -27,6 +27,8 @@ namespace Server_CS
         /// </summary>
         public static Dictionary<string, DateTime> OnlineUsersTimeout = new Dictionary<string, DateTime>();
 
+        private static string Url = "http://localhost:5000";
+
         /// <summary>
         ///     Точка входа
         /// </summary>
@@ -34,6 +36,27 @@ namespace Server_CS
         public static void Main(string[] args)
         {
             JsonWorker.Load();
+            string IP;
+            string port;
+
+            if (args.Length > 0)
+            {
+                IP = args[0];
+                port = args[1];
+                Url = $"http://{IP}:{port}";
+            }
+            else
+            {
+                Console.Write("Enter IP(or press enter or default):");
+                IP = Console.ReadLine();
+                if (!string.IsNullOrEmpty(IP))
+                {
+                    Console.Write("Enter port:");
+                    port = Console.ReadLine();
+                    Url = $"http://{IP}:{port}";
+                }
+            }
+
             CreateHostBuilder(args).Build().Run();
         }
 
@@ -44,7 +67,11 @@ namespace Server_CS
         public static IHostBuilder CreateHostBuilder(string[] args)
         {
             return Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); });
+                .ConfigureWebHostDefaults(webBuilder =>
+                {
+                    webBuilder.UseStartup<Startup>();
+                    webBuilder.UseUrls(Url);
+                });
         }
     }
 }

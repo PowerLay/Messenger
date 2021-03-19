@@ -31,20 +31,21 @@
             Padding="20,0,0,0"
             IsTabStop="False"
             UseSystemFocusVisuals="False"
-            VerticalScrollBarVisibility="Auto"
+            VerticalScrollBarVisibility="Auto" 
+            BorderThickness="3" BorderBrush="{ThemeResource SystemControlBackgroundListMediumRevealBorderBrush}"
             VerticalScrollMode="Auto">
             <StackPanel HorizontalAlignment="Left">
                 <TextBlock
                     Style="{StaticResource TitleTextBlockStyle}"
-                    Margin="0,4,0,0"
+                    Margin="0,10,0,0"
                     Text="Login" MinWidth="200" />
-                <TextBox Name="LoginBox" PlaceholderText="Nickname" KeyDown="LoginBox_OnKeyDown" />
-                <PasswordBox Name="PasswordBox" PlaceholderText="Password" KeyDown="PasswordBox_OnKeyDown" />
-                <Button Content="Login" HorizontalAlignment="Center" Click="ButtonBase_OnClick" Margin="5" />
-                <TextBlock Text="" HorizontalAlignment="Center" Name="WarningText" />
+                <TextBox Margin="0,10,0,0" BorderThickness="3" BorderBrush="{ThemeResource SystemControlBackgroundListMediumRevealBorderBrush}" Name="LoginBox" PlaceholderText="Nickname" KeyDown="LoginBox_OnKeyDown" />
+                <PasswordBox Margin="0,10,0,0" BorderThickness="3" BorderBrush="{ThemeResource SystemControlBackgroundListMediumRevealBorderBrush}" Name="PasswordBox" PlaceholderText="Password" KeyDown="PasswordBox_OnKeyDown" />
+                <Button Margin="0,10,0,0" Style="{StaticResource ButtonRevealStyle}" Content="Login" HorizontalAlignment="Center" Click="ButtonBase_OnClick" />
+                <TextBlock Margin="0,10,0,0" Text="" HorizontalAlignment="Center" Name="WarningText" />
             </StackPanel>
         </ScrollViewer>
 
-        <Frame x:Name="ContentFrame" />
+        <Frame x:Name="ContentFrame" Navigated="ContentFrame_Navigated" />
     </Grid>
 </Page>

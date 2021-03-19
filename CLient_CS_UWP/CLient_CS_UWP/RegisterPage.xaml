@@ -32,17 +32,18 @@
             IsTabStop="False"
             UseSystemFocusVisuals="False"
             VerticalScrollBarVisibility="Auto"
-            VerticalScrollMode="Auto">
+            VerticalScrollMode="Auto"
+            BorderThickness="3" BorderBrush="{ThemeResource SystemControlBackgroundListMediumRevealBorderBrush}">
             <StackPanel HorizontalAlignment="Left">
                 <TextBlock
                     Style="{StaticResource TitleTextBlockStyle}"
-                    Margin="0,4,0,0"
+                    Margin="0,10,0,0"
                     Text="Register" MinWidth="200" />
-                <TextBox Name="LoginBox" PlaceholderText="Nickname" KeyDown="Box_OnKeyDown" />
-                <PasswordBox Name="PasswordBox1" PlaceholderText="Password" KeyDown="Box_OnKeyDown" />
-                <PasswordBox Name="PasswordBox2" PlaceholderText="Repeat password" KeyDown="Box_OnKeyDown" />
-                <Button Content="Register" HorizontalAlignment="Center" Click="Register_OnClick" Margin="5" />
-                <TextBlock Text="" HorizontalAlignment="Center" Name="WarningText" />
+                <TextBox Margin="0,10,0,0" BorderThickness="3" BorderBrush="{ThemeResource SystemControlBackgroundListMediumRevealBorderBrush}" Name="LoginBox" PlaceholderText="Nickname" KeyDown="Box_OnKeyDown" />
+                <PasswordBox Margin="0,10,0,0" BorderThickness="3" BorderBrush="{ThemeResource SystemControlBackgroundListMediumRevealBorderBrush}" Name="PasswordBox1" PlaceholderText="Password" KeyDown="Box_OnKeyDown" />
+                <PasswordBox Margin="0,10,0,0" BorderThickness="3" BorderBrush="{ThemeResource SystemControlBackgroundListMediumRevealBorderBrush}" Name="PasswordBox2" PlaceholderText="Repeat password" KeyDown="Box_OnKeyDown" />
+                <Button Margin="0,10,0,0" Style="{StaticResource ButtonRevealStyle}" Content="Register" HorizontalAlignment="Center" Click="Register_OnClick" />
+                <TextBlock Margin="0,10,0,0" Text="" HorizontalAlignment="Center" Name="WarningText" />
             </StackPanel>
         </ScrollViewer>
     </Grid>
