@@ -23,7 +23,7 @@ namespace Client_CS_CLI
             try
             {
                 var httpWebRequest =
-                    (HttpWebRequest) WebRequest.Create("http://localhost:5000/api/Online");
+                    (HttpWebRequest) WebRequest.Create($"http://{ConfigManager.Config.IP}:{ConfigManager.Config.Port}/api/Online");
                 httpWebRequest.ContentType = "application/json";
                 httpWebRequest.Method = "POST";
                 httpWebRequest.Headers.Add("Authorization", "Bearer " + ConfigManager.Config.Token);
@@ -89,7 +89,7 @@ namespace Client_CS_CLI
         /// </summary>
         public static async Task UpdateHistory()
         {
-            var res = await GetAsync("http://localhost:5000/api/Chat");
+            var res = await GetAsync($"http://{ConfigManager.Config.IP}:{ConfigManager.Config.Port}/api/Chat");
 
             if (res != "[]")
             {

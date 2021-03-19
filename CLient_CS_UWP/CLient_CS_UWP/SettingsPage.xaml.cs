@@ -83,7 +83,20 @@ namespace CLient_CS_UWP
             var uri = new Uri("http://group-hw.ru/");
             await Launcher.LaunchUriAsync(uri);
         }
+        
+        private async void ButtonFuter_click(object sender, RoutedEventArgs e)
+        {
+            var deleteFileDialog = new ContentDialog
+            {
+                Title = "New features:",
+                Content = "\u2022 Added an excellent .exe installer.\n\u2022 Added beautiful design of UWP acrylic.\n\u2022 Added sound effects.\n\u2022 Added this button.",
+                PrimaryButtonText = "Close",
+            };
 
+            var result = await deleteFileDialog.ShowAsync();
+
+            if (result != ContentDialogResult.Primary) return;
+        }
         /// <summary>
         ///     Обработчик изменения адреса сервера
         /// </summary>
@@ -99,6 +112,20 @@ namespace CLient_CS_UWP
         {
             if (int.TryParse(IPBox.Text, out var Port))
                 ConfigManager.Config.Port = Port;
+        }
+
+        private void soundSwitch_Toggled(object sender, RoutedEventArgs e)
+        {
+            if (soundSwitch.IsOn)
+            {
+                ElementSoundPlayer.State = ElementSoundPlayerState.Off;
+                ElementSoundPlayer.State = ElementSoundPlayerState.On;
+            }
+            else
+            {
+                ElementSoundPlayer.State = ElementSoundPlayerState.Off;
+                ElementSoundPlayer.State = ElementSoundPlayerState.Off;
+            }
         }
     }
 }

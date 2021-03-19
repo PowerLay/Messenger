@@ -16,7 +16,7 @@
                     PaneDisplayMode="Top"
                     SelectionFollowsFocus="Disabled"
                     IsTabStop="False">
-        <NavigationView.MenuItems>
+        <NavigationView.MenuItems> 
             <NavigationViewItem Content="Login" Tag="LoginPage" x:Name="LoginPageNv" />
             <NavigationViewItem Content="Register" Tag="RegisterPage" x:Name="RegisterPageNv" />
             <NavigationViewItem Content="Chat" Tag="ChatPage" x:Name="ChatPageNv" />

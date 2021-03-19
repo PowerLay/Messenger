@@ -32,7 +32,7 @@ namespace CLient_CS_UWP
         /// <summary>
         ///     Обработка нажатия кнопки авторизации
         /// </summary>
-        private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
+        private async void ButtonBase_OnClick(object sender, RoutedEventArgs e)
         {
             if (LoginBox.Text.Length >= 20 || LoginBox.Text == "" || LoginBox.Text.Contains(" "))
             {
@@ -111,12 +111,24 @@ namespace CLient_CS_UWP
             catch
             {
                 WarningText.Text = "The server is not responding!";
-
                 ShowMessage();
                 return false;
             }
         }
 
+        private async void ShowMessage()
+        {
+            var deleteFileDialog = new ContentDialog
+            {
+                Title = "Error",
+                Content = "The server is not responding!",
+                PrimaryButtonText = "Close"
+            };
+
+            var result = await deleteFileDialog.ShowAsync();
+
+            if (result != ContentDialogResult.Primary) return;
+        }
         /// <summary>
         ///     Обработка нажатия enter
         /// </summary>
@@ -135,6 +147,11 @@ namespace CLient_CS_UWP
         {
             if (e.Key == VirtualKey.Enter)
                 ButtonBase_OnClick(sender, e);
+        }
+
+        private void ContentFrame_Navigated(object sender, Windows.UI.Xaml.Navigation.NavigationEventArgs e)
+        {
+
         }
     }
 }

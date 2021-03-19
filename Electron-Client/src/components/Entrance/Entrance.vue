@@ -1,25 +1,32 @@
 <template>
   <v-container fluid fill-height>
-    <v-row justify="center" align="center" width=100%>
-        <LRForm  @changeView="changeView" />
+    <v-row justify="center" align="center" width="100%">
+      <component :is="entranceView" @changeView="changeView"></component>
     </v-row>
   </v-container>
 </template>
 
-<script lang="ts">
+<script>
 import Vue from "vue";
-import EntranceCard from "./EntranceCard.vue";
 import LRForm from "./LoginRegisterForm.vue";
+import SettingsForm from "./Settings.vue";
 
 export default Vue.extend({
   name: "Entrance",
   components: {
-    LRForm//EntranceCard
+    LRForm,
+    SettingsForm
   },
-  data: () => ({}),
-  methods:{
-    changeView(a: string){
-      this.$emit("changeView", a);
+  data: () => ({
+    entranceView: "SettingsForm"
+  }),
+  methods: {
+    changeView(a) {
+      if (a.includes('ChatWindow')){
+        this.$emit("changeView", a);
+      } else {
+        this.entranceView=a
+      }
     }
   }
 });

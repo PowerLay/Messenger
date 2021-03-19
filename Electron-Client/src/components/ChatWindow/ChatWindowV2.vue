@@ -6,9 +6,9 @@
           <div class="chatbox__messages" id="scroller">
             <Message
               v-for="msg in messages"
-              :text="msg.text + ' ' +onlineUsers[msg.name]"
+              :text="msg.text"
               :out="msg.name == settings.username"
-              :online="onlineUsers[msg.name]"
+              :online="onlineUsers.includes(msg.name)"
               :uname="msg.name"
               :ts="msg.ts"
               :key="msg.ts + '_' + Math.random()"
@@ -56,11 +56,13 @@ export default {
     },
     rawOnlineUsers(n, o) {
       const diff = this.lodash.differenceWith(n, o, this.lodash.isEqual);
-      console.info(o,n)
-      if (diff.length) {
-        console.info(111)
+      if (n.length < o.length) {
+        // new < old
+        this.onlineUsers = this.lodash.differenceWith(n, diff, this.lodash.isEqual);
+      } else if (diff.length) {
+        // new = old or new > old
         this.onlineUsers = [...this.onlineUsers, ...diff];
-      } 
+      }
     }
   },
   methods: {
@@ -128,7 +130,7 @@ export default {
   mounted() {
     this.globalThis = this; // trick to bypass eslynt shit
     const t = this.globalThis;
-    //this.subscribeToMessages();
+    this.subscribeToMessages();
     this.subscribeToOnlinePost();
     this.subscribeToOnlineGet();
 
@@ -154,28 +156,29 @@ export default {
 
 <style>
 /* позаимствовано из клиента вк */
-.im_initials_avatar.-color1 {
-    background-image: radial-gradient(circle at center 0px, #FFC247, #FFA21F);
-}
 .im_initials_avatar {
-    border-radius: 50%;
-    text-align: center;
-    text-transform: uppercase;
-    user-select: none;
+  border-radius: 50%;
+  text-align: center;
+  text-transform: uppercase;
+  user-select: none;
 }
 .chatbox_avatar {
-  width: 44px; height: 44px; font-size: 22px; line-height: 44px; letter-spacing: 0.4px;
+  width: 44px;
+  height: 44px;
+  font-size: 22px;
+  line-height: 44px;
+  letter-spacing: 0.4px;
 }
 .im_dialog_item_online {
-    content: '';
-    position: relative;
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: #71cb50;
-    border: 2px #71cb50 solid;
-    bottom: 9px;
-    right: 1px;
+  content: "";
+  position: relative;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #71cb50;
+  border: 2px #71cb50 solid;
+  bottom: 9px;
+  right: 1px;
 }
 
 @import url("https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700");
