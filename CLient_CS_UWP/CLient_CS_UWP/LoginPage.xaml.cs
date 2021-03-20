@@ -34,14 +34,18 @@ namespace CLient_CS_UWP
         /// </summary>
         private async void ButtonBase_OnClick(object sender, RoutedEventArgs e)
         {
+            LoginButton.IsEnabled = false;
             if (LoginBox.Text.Length >= 20 || LoginBox.Text == "" || LoginBox.Text.Contains(" "))
             {
                 WarningText.Text = "Invalid nickname format";
+                LoginButton.IsEnabled = true;
                 return;
             }
 
-            if (!(await CheckNickUnicall()))
+            if (!await CheckNickUnicall())
             {
+                WarningText.Text = "User with this nickname does not exist";
+                LoginButton.IsEnabled = true;
                 return;
             }
 
@@ -68,6 +72,7 @@ namespace CLient_CS_UWP
             catch (Exception)
             {
                 WarningText.Text = "Unauthorized";
+                LoginButton.IsEnabled = true;
                 return;
             }
 
@@ -77,6 +82,7 @@ namespace CLient_CS_UWP
             ConfigManager.Config.Token = temp.Token;
 
             ConfigManager.Config.RegData = regData;
+            LoginButton.IsEnabled = true;
             WarningText.Text = "Success!";
             ConfigManager.WriteConfig();
             var nvMain = (NavigationView) Frame.FindName("nvMain");
@@ -87,7 +93,7 @@ namespace CLient_CS_UWP
         ///     Проверка на уникальность ника
         /// </summary>
         /// <returns>Если уникален то истина</returns>
-        private async Task<bool>  CheckNickUnicall()
+        private async Task<bool> CheckNickUnicall()
         {
             var httpWebRequest =
                 (HttpWebRequest) WebRequest.Create(
@@ -97,20 +103,22 @@ namespace CLient_CS_UWP
             try
             {
                 WarningText.Text = "Connecting...";
+                LoadBar.IsActive = true;
                 var httpResponse = (HttpWebResponse)await httpWebRequest.GetResponseAsync();
                 var streamReader = new StreamReader(httpResponse.GetResponseStream());
                 var result = streamReader.ReadToEnd();
+                LoadBar.IsActive = false;
                 WarningText.Text = "Done!";
 
                 var checkNickUnicall = JsonConvert.DeserializeAnonymousType(result, new { response = false }).response;
-                if(!checkNickUnicall)
+                if (!checkNickUnicall)
                     WarningText.Text = "User with this nickname does not exist";
 
                 return checkNickUnicall;
             }
             catch
             {
-                WarningText.Text = "The server is not responding!";
+                LoadBar.IsActive = false;
                 ShowMessage();
                 return false;
             }

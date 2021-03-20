@@ -27,6 +27,8 @@ namespace CLient_CS_UWP
             WindowH.Text = ConfigManager.Config.Size.Height.ToString(CultureInfo.InvariantCulture);
             IPBox.Text = ConfigManager.Config.IP;
             PortBox.Text = ConfigManager.Config.Port.ToString();
+            if (ElementSoundPlayer.State == ElementSoundPlayerState.On)
+                soundSwitch.IsOn = true;
         }
 
         /// <summary>
@@ -89,7 +91,7 @@ namespace CLient_CS_UWP
             var deleteFileDialog = new ContentDialog
             {
                 Title = "New features:",
-                Content = "\u2022 Added an excellent .exe installer.\n\u2022 Added beautiful design of UWP acrylic.\n\u2022 Added sound effects.\n\u2022 Added this button.",
+                Content = "Version: 0.5.0:\n\u2022 Added an excellent .exe installer.\n\u2022 Added beautiful design of UWP acrylic.\n\u2022 Added sound effects.\n\u2022 Added this button.",
                 PrimaryButtonText = "Close",
             };
 
